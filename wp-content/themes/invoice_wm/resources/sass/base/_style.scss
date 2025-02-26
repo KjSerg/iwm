@@ -1,0 +1,136 @@
+html {
+  font-size: 10px;
+  @media (max-width: 1200px) {
+    font-size: 9px;
+  }
+}
+
+body {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+  color: #333;
+  font-family: "Montserrat", serif;
+  font-size: 1.8rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 140%;
+}
+
+html, body {
+  min-height: 100%;
+  height: 100%;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+main.content {
+  position: relative;
+  flex: 1;
+}
+
+a {
+  font-family: "Montserrat", serif;
+  font-weight: 400;
+}
+
+img:not(.pswp__img) {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+}
+
+svg {
+  width: 100%;
+  height: 100%;
+}
+
+.not-active {
+  pointer-events: none;
+  opacity: 0.6;
+  transition: 0.3s ease;
+}
+
+.preloader img {
+  max-width: 100%;
+  width: 100%;
+  height: 100%;
+  opacity: 0.5;
+}
+
+.preloader {
+  position: fixed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  width: 100px;
+  height: 100px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 2rem;
+  background-color: rgba(0, 122, 255, .1);
+  opacity: 0;
+  transition: 0.1s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.preloader.active {
+  transform: translate(-50%, -50%);
+  opacity: 1;
+  z-index: 20;
+}
+
+img.contain {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+img.cover {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+section {
+  position: relative;
+}
+
+.container {
+  width: 100%;
+  max-width: 156rem;
+  margin: 0 auto;
+
+  @media (max-width: 1600px) {
+    padding: 0 1.6rem;
+  }
+}
+
+strong {
+  font-weight: bold;
+}
+
+em, i {
+  font-style: italic;
+}
+
+.section {
+  position: relative;
+
+  &:not(.head-section) {
+    padding: 9rem 0;
+    @media (max-width: 1024px) {
+      padding: 4rem 0;
+    }
+  }
+}
+
+.hidden {
+  display: none !important;
+}

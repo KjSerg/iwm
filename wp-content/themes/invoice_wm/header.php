@@ -12,7 +12,7 @@ $url  = site_url();
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <meta name="msapplication-TileColor" content="#062058">
+    <meta name="msapplication-TileColor" content="#1F223F">
     <meta name="theme-color" content="#062058">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -25,9 +25,15 @@ $url  = site_url();
 <header class="header">
     <div class="container">
         <div class="header-container">
-            <a href="<?php echo $url; ?>" class="logo header__logo">
-                <img src="<?php _u( carbon_get_theme_option( 'logo' ) ) ?>" alt="<?php bloginfo( 'name' ); ?>">
-            </a>
+            <div class="header-container__logo">
+                <a href="<?php echo $url; ?>" class="logo header__logo">
+                    <img
+                            src="<?php _u( carbon_get_theme_option( 'logo' ) ) ?>"
+                            alt="<?php bloginfo( 'name' ); ?>"
+                    >
+                </a>
+            </div>
+
         </div>
     </div>
 </header>

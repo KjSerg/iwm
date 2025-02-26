@@ -6,4 +6,5 @@ $assets   = $var['assets'];
 $url      = $var['url'];
 $url_home = $var['url_home'];
 $id       = get_the_ID();
+
 get_footer();

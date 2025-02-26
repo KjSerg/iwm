@@ -1,10 +1,10 @@
 let mix = require('laravel-mix');
 const autoprefixer = require('autoprefixer');
-mix.js('resources/js/app.js', 'js')
+mix.js('resources/js/app.js', 'assets/js')
     .autoload({
         jquery: ['$', 'window.jQuery', 'jQuery']
     })
-    .sass('resources/sass/app.scss', 'css', {
+    .sass('resources/sass/app.scss', 'assets/css', {
         sassOptions: {
             outputStyle: 'expanded'
         }
