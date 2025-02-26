@@ -29,6 +29,7 @@ class Carbon {
 
 	private function initialize_actions(): void {
 		add_action( 'after_setup_theme', [ $this, 'load_carbon_fields' ] );
+		add_action( 'carbon_fields_register_fields', [ $this, 'register_theme_options' ] );
 		add_action( 'carbon_fields_register_fields', [ $this, 'attach_fields_to_bill' ] );
 	}
 
@@ -36,6 +37,13 @@ class Carbon {
 		add_filter( 'crb_media_buttons_html', [ $this, 'filter_media_buttons_html' ], 10, 2 );
 	}
 
+	public function register_theme_options(): void {
+		Container::make( 'theme_options', 'Theme Settings' )
+		         ->set_page_parent( 'options-general.php' )
+		         ->add_fields( array(
+			         Field::make( 'image', 'logo' )->set_required(),
+		         ) );
+	}
 
 	public function filter_media_buttons_html( string $html, string $field_name ): ?string {
 		if ( in_array( $field_name, $this->fields_without_button, true ) ) {
