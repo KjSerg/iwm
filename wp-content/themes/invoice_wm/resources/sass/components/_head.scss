@@ -1,0 +1,15 @@
+.head{
+  &__title{
+    color: #FFF;
+    font-size: 4.2rem;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+  }
+  &-section{
+    padding-top: 20rem;
+    padding-bottom: 12rem;
+    min-height: 55.2rem;
+    background: linear-gradient(180deg, #2C315D 0%, #1F223F 100%);
+  }
+}

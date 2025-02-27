@@ -1,4 +1,10 @@
 .header {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
   &__logo {
     width: 8rem;
     height: 4rem;
@@ -7,19 +13,36 @@
   }
 
   &-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     &__logo {
+      transform: translateY(-20rem);
       display: flex;
       align-items: flex-end;
       justify-content: center;
       width: 31rem;
       height: 31rem;
-      padding-bottom: 4rem;
-      padding-top: 22rem;
+      padding: 22rem 4rem 4rem;
       flex-shrink: 0;
       flex-grow: 0;
       border-radius: 50%;
       border: 1px solid rgba(0, 0, 0, 0.09);
       background: rgba(35, 39, 71, 0.71);
+      will-change: transform;
+      transition: 0.4s ease-in-out;
+      img, svg{
+
+        will-change: transform;
+        transition: 0.4s ease-in-out;
+      }
+      &:hover{
+        width: 35rem;
+        height: 35rem;
+        img, svg{
+          transform: translateY(-50%) scale(1.1);
+        }
+      }
     }
   }
 }
