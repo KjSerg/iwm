@@ -3,27 +3,47 @@
     width: 100%;
     max-width: 109rem;
     margin: -9rem auto 0;
-    background: rgba(242, 243, 249, 0.26);
+    input, select{
+      width: 100%;
+      background-color: rgba(0,0,0,0);
+      border: none;
+      color: #333;
+      font-size: 1.8rem;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 140%;
+      font-family: "Montserrat", serif;
+    }
     &-controls{
       display: flex;
       align-items: center;
       justify-content: flex-end;
       gap: 1rem;
-      input, select{
-        background-color: rgba(0,0,0,0);
-        border: none;
-        color: #333;
-        font-size: 1.8rem;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 140%;
-        font-family: "Montserrat", serif;
+
+      label {
+        display: flex;
+        width: 40%;
+        @media (max-width: 400px) {
+          width: 100%;
+        }
       }
+
     }
     &-row{
       display: flex;
       padding: 1rem 4rem;
       border-bottom: 2px solid #E2E3EE;
+      background: rgba(242, 243, 249, 0.26);
+      @media (max-width: 500px) {
+        padding: 1rem;
+      }
+      @media (max-width: 400px) {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      &.paid{
+        background: aquamarine;
+      }
       &__title{
         color: #333;
         font-size: 1.8rem;
@@ -34,8 +54,15 @@
     }
     &-column{
       width: calc(50% - 1rem);
+      @media (max-width: 400px) {
+        width: 100%;
+      }
       &:not(:last-child){
         margin-right: 1rem;
+        @media (max-width: 400px) {
+          margin-right: 0;
+          margin-bottom: 1rem;
+        }
       }
     }
     &__title{
@@ -49,6 +76,9 @@
       padding: 3rem 4rem;
       height: 9rem;
       background: #F2F3F9;
+      @media (max-width: 500px) {
+        padding: 3rem 1rem;
+      }
     }
   }
   &-section{

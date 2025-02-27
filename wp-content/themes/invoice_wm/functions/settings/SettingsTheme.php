@@ -127,7 +127,6 @@ $settings->disable_content_editor( [
 	'index.php',
 ] );
 $settings->add_custom_admin_css();
-$settings->add_menu_bubble();
 $settings->archive_title_hook();
 $settings->association_field_title();
 $settings->get_attach_by_id_js();

@@ -6,10 +6,11 @@ use InvoiceWM\views\Bills;
 
 class BillController {
 	public static function render_bills(): void {
-
-		$bills = BillModel::get_bills();
-		$view = new Bills();
-		$view->render( $bills );
+		$show_posts   = get_option( 'posts_per_page' );
+		$page         = filter_input( INPUT_GET, 'page_number', FILTER_SANITIZE_NUMBER_INT ) ?: 1;
+		$bills = BillModel::get_bills($page, $show_posts);
+		$data = new Bills();
+		$data->render($bills['bills'], $page, $bills['max_pages']);
 	}
 }
 

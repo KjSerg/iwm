@@ -17,5 +17,8 @@
     "resolve-url-loader": "^5.0.0",
     "sass": "^1.85.1",
     "sass-loader": "^12.6.0"
+  },
+  "dependencies": {
+    "@fancyapps/fancybox": "^3.5.7"
   }
 }

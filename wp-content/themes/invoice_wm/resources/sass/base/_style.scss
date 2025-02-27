@@ -134,3 +134,104 @@ em, i {
 .hidden {
   display: none !important;
 }
+
+
+.modal-window {
+  display: none;
+  padding: 4rem;
+  width: 100%;
+  max-width: 50.4rem;
+  background: #FFF;
+
+  @media (max-width: 500px) {
+    padding: 4rem 2rem;
+  }
+
+  &__title {
+    margin-bottom: 2.4rem;
+    color: #020A1B;
+    font-family: "Exo 2", serif;
+    font-size: 2.8rem;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 140%;
+    letter-spacing: 0.014rem;
+    text-transform: uppercase;
+    @media (max-width: 1024px) {
+      margin-bottom: 2rem;
+      font-size: 2rem;
+    }
+  }
+
+  &__text {
+    margin-bottom: 3rem;
+  }
+
+  &-conditions {
+    width: 100%;
+    max-width: 77rem;
+  }
+
+  &-buttons {
+    display: flex;
+    gap: 1rem;
+
+    & > * {
+      flex: 1;
+    }
+  }
+
+  &-notice {
+    text-align: center;
+
+    &__button {
+      width: 100%;
+    }
+  }
+}
+
+
+.copy-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  margin-left: 1rem;
+  padding: 0.4rem;
+  flex-grow: 0;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 1px solid #5F638D;
+  background-color: #F9FAFF;
+  transition: 0.5sease;
+}
+.pagination-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 3rem;
+}
+.circle-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 5rem;
+  height: 5rem;
+  padding: 1rem;
+  border-radius: 50%;
+  border: 1px solid #5F638D;
+  transition: 0.5s ease;
+  &:hover {
+    transform: rotate(90deg);
+  }
+  svg path {
+    fill: #1B215C;
+  }
+}
+img {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+}

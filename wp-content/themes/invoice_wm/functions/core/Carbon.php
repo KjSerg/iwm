@@ -1,6 +1,6 @@
 <?php
 
-namespace Invoice\core;
+namespace InvoiceWM\core;
 
 use Carbon_Fields\Container;
 use Carbon_Fields\Field;
@@ -76,12 +76,18 @@ class Carbon {
 		Container::make( 'post_meta', 'Data' )
 		         ->where( 'post_type', '=', 'bill' )
 		         ->add_fields( [
-			         Field::make( 'text', 'invoice_sum' )->set_width(50)
+			         Field::make( 'text', 'invoice_sum' )->set_width( 50 )
 			              ->set_required()
 			              ->set_attribute( 'type', 'number' ),
-			         Field::make( 'select', 'invoice_currency' )->set_width(50)
+			         Field::make( 'select', 'invoice_currency' )->set_width( 50 )
 			              ->set_required()
 			              ->set_options( 'get_invoice_currency' ),
+			         Field::make( 'select', 'invoice_status' )->set_width( 50 )
+			              ->set_required()
+			              ->set_options( [
+				              'not_paid' => __( 'Not paid' ),
+				              'paid'     => __( 'Paid' ),
+			              ] ),
 		         ] );
 	}
 

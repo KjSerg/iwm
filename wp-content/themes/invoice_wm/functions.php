@@ -8,6 +8,7 @@ function invoice_wm_scripts(): void {
 add_action( 'wp_enqueue_scripts', 'invoice_wm_scripts' );
 
 get_template_part( 'functions/core/Carbon' );
+get_template_part( 'functions/core/Ajax' );
 get_template_part( 'functions/features/Columns' );
 get_template_part( 'functions/helpers/helpers' );
 get_template_part( 'functions/settings/SettingsTheme' );

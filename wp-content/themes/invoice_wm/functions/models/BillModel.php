@@ -1,17 +1,18 @@
 <?php
 namespace InvoiceWM\models;
 class BillModel {
-	public static function get_bills( $args = [] ): array {
-		$show_posts   = get_option( 'posts_per_page' );
-		$page         = filter_input( INPUT_GET, 'page_number', FILTER_SANITIZE_NUMBER_INT );
+	public static function get_bills( $paged = 1, $posts_per_page = 10): array {
 		$default_args = [
 			'post_type'      => 'bill',
-			'posts_per_page' => $show_posts,
+			'posts_per_page' => $posts_per_page,
 			'post_status'    => 'publish',
-			'paged'          => $page,
+			'paged'          => $paged
 		];
-		$query_args   = wp_parse_args( $args, $default_args );
+		$query = new \WP_Query($default_args);
 
-		return get_posts( $query_args );
+		return [
+			'bills' => $query->posts,
+			'max_pages' => $query->max_num_pages
+		];
 	}
 }
