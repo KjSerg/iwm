@@ -1,4 +1,6 @@
 <?php
+
+use InvoiceWM\controller\BillController;
 \Invoice\settings\SettingsTheme::redirect_to_art();
 get_header();
 $var      = variables();
@@ -8,12 +10,26 @@ $url      = $var['url'];
 $url_home = $var['url_home'];
 $id       = get_the_ID();
 ?>
-    <div class="head-section section">
+    <section class="head-section section">
         <div class="container">
             <div class="head__title">
                 Список
             </div>
         </div>
-    </div>
-<?php
-get_footer();
+    </section>
+
+    <section class="section archive-section">
+        <div class="container">
+            <div class="archive-table">
+                <div class="archive-table-head archive-table-row">
+                    <div class="archive-table-column">
+                        <div class="archive-table__title">Рахунки</div>
+                    </div>
+                    <div class="archive-table-column"></div>
+                </div>
+				<?php BillController::render_bills(); ?>
+            </div>
+        </div>
+    </section>
+
+<?php get_footer();

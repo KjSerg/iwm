@@ -11,3 +11,6 @@ get_template_part( 'functions/core/Carbon' );
 get_template_part( 'functions/features/Columns' );
 get_template_part( 'functions/helpers/helpers' );
 get_template_part( 'functions/settings/SettingsTheme' );
+require_once get_template_directory() . '/functions/view/Bills.php';
+require_once get_template_directory() . '/functions/models/BillModel.php';
+require_once get_template_directory() . '/functions/controllers/BillController.php';

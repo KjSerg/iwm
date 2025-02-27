@@ -9,8 +9,8 @@ class Carbon {
 
 	private static ?self $instance = null;
 
-	private array $labels;
-	private array $screens_labels;
+//	private array $labels;
+//	private array $screens_labels;
 	private array $fields_without_button;
 
 	private function __construct() {
@@ -54,20 +54,20 @@ class Carbon {
 	}
 
 	private function initialize_labels(): void {
-		$this->labels = [
-			'plural_name'   => 'items',
-			'singular_name' => 'item',
-		];
-
-		$this->screens_labels = [
-			'plural_name'   => 'screens',
-			'singular_name' => 'screen',
-		];
-
-		$this->types_labels = [
-			'plural_name'   => 'types',
-			'singular_name' => 'type',
-		];
+//		$this->labels = [
+//			'plural_name'   => 'items',
+//			'singular_name' => 'item',
+//		];
+//
+//		$this->screens_labels = [
+//			'plural_name'   => 'screens',
+//			'singular_name' => 'screen',
+//		];
+//
+//		$this->types_labels = [
+//			'plural_name'   => 'types',
+//			'singular_name' => 'type',
+//		];
 
 		$this->fields_without_button = [ 'text', 'subtitle', 'title' ];
 	}
@@ -81,11 +81,7 @@ class Carbon {
 			              ->set_attribute( 'type', 'number' ),
 			         Field::make( 'select', 'invoice_currency' )->set_width(50)
 			              ->set_required()
-			              ->set_options( array(
-				              'UAH' => 'UAH',
-				              'USD' => 'USD',
-				              'EUR' => 'EUR',
-			              ) ),
+			              ->set_options( 'get_invoice_currency' ),
 		         ] );
 	}
 

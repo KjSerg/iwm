@@ -310,3 +310,11 @@ function get_client_ip(): string {
 		return $_SERVER['REMOTE_ADDR'] ?? 'Unknown';
 	}
 }
+
+function get_invoice_currency(): array {
+	return array(
+		'UAH' => 'UAH',
+		'USD' => 'USD',
+		'EUR' => 'EUR',
+	);
+}
