@@ -318,3 +318,17 @@ function get_invoice_currency(): array {
 		'EUR' => 'EUR',
 	);
 }
+
+function get__filter_link( $k = '', $v = '' ): ?string {
+	$selected_currency = filter_input( INPUT_GET, 'currency' ) ?: '';
+	$get_string        = $selected_currency ? 'currency=' . $selected_currency : '';
+	$url               = site_url();
+	$res               = $url;
+	if ( $k && $v ) {
+		$res .= '?' . $k . '=' . $v;
+		if($get_string){
+			$res .= '&' . $get_string;
+		}
+	}
+	return $res;
+}

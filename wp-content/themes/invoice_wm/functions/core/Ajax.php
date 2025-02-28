@@ -41,14 +41,10 @@ class Ajax {
 		if ( ! $invoice_sum || $invoice_currency == '' ) {
 			$this->send_error( 'Error $invoice_sum or $invoice_currency' );
 		}
-		if ( $post_title == '' ) {
-			$this->send_error( 'Error $post_title' );
-		}
 		carbon_set_post_meta( $id, 'invoice_sum', $invoice_sum );
 		carbon_set_post_meta( $id, 'invoice_currency', $invoice_currency );
 		$_id = wp_update_post( [
 			'ID'         => $id,
-			'post_title' => $post_title,
 		] );
 		$this->send_response( [
 			'result'           => 'success',

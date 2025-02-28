@@ -1,8 +1,21 @@
 .archive{
   &-table{
     width: 100%;
-    max-width: 109rem;
     margin: -9rem auto 0;
+    min-width: 740px;
+    @media (max-width: 767px){
+      margin-top: 0;
+    }
+    &-wrapper{
+      width: 100%;
+      @media (max-width: 767px){
+        overflow: auto;
+      }
+    }
+    &__date{
+      font-size: 1.4rem;
+      font-weight: 400;
+    }
     input, select{
       width: 100%;
       background-color: rgba(0,0,0,0);
@@ -17,29 +30,24 @@
     &-controls{
       display: flex;
       align-items: center;
-      justify-content: flex-end;
+      justify-content: flex-start;
       gap: 1rem;
-
+      .copy-link{
+        margin-left: auto;
+      }
       label {
         display: flex;
         width: 40%;
-        @media (max-width: 400px) {
-          width: 100%;
-        }
       }
 
     }
     &-row{
       display: flex;
-      padding: 1rem 4rem;
+      padding: 1rem 2rem;
       border-bottom: 2px solid #E2E3EE;
       background: rgba(242, 243, 249, 0.26);
       @media (max-width: 500px) {
         padding: 1rem;
-      }
-      @media (max-width: 400px) {
-        flex-direction: column;
-        align-items: flex-start;
       }
       &.paid{
         background: aquamarine;
@@ -53,31 +61,43 @@
       }
     }
     &-column{
-      width: calc(50% - 1rem);
-      @media (max-width: 400px) {
-        width: 100%;
+      width: 100%;
+      &:first-child{
+        width: 20%;
       }
+      &:nth-child(2n){
+        width: calc(60% - 1rem);
+        flex-grow: 0;
+        flex-shrink: 0;
+      }
+
       &:not(:last-child){
         margin-right: 1rem;
-        @media (max-width: 400px) {
-          margin-right: 0;
-          margin-bottom: 1rem;
-        }
       }
     }
     &__title{
+      display: inline-flex;
+      padding: 0 0.5rem;
       color: #202554;
-      font-size: 1.8rem;
+      font-size: 1.6rem;
       font-style: normal;
-      font-weight: 600;
+      font-weight: 500;
       line-height: 150%;
     }
     &-head{
-      padding: 3rem 4rem;
+      padding: 3rem 2rem;
       height: 9rem;
       background: #F2F3F9;
       @media (max-width: 500px) {
         padding: 3rem 1rem;
+      }
+      &-controls{
+        display: flex;
+        width: 100%;
+        gap: 1rem;
+      }
+      &__title{
+        width: 40%;
       }
     }
   }

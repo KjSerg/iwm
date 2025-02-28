@@ -12,16 +12,17 @@ class Bills {
                     <form class="archive-table-row form-js no-reset <?php echo $invoice_status ?>"
                           id="archive-table-controls-<?php echo $id ?>" novalidate method="post">
                         <div class="archive-table-column">
-                            <label class="archive-table-row__title">
-                                <input type="text" name="post_title"
-                                       class="trigger-form-js"
-                                       value="<?php echo esc_attr( $bill->post_title ) ?>">
-                            </label>
+                            <div class="archive-table__date"><?php echo get_the_date( 'd-m', $id ); ?></div>
+                            <div class="archive-table__date"><?php echo get_the_date( 'H:i', $id ); ?></div>
+                        </div>
+                        <div class="archive-table-column">
+                            <a href="<?php echo get_the_permalink( $id ) . '?action=edit' ?>"
+                               class="archive-table-row__title">
+								<?php echo esc_html( $bill->post_title ) ?>
+                            </a>
                         </div>
                         <div class="archive-table-column">
                             <div class="archive-table-controls ">
-                                <input type="hidden" name="action" value="change_bill">
-                                <input type="hidden" name="bill_id" value="<?php echo $id ?>">
                                 <label>
                                     <input type="number" name="invoice_sum"
                                            class="trigger-form-js"
@@ -40,12 +41,13 @@ class Bills {
 										} ?>
                                     </select>
                                 </label>
-								<?php wp_nonce_field( 'change_bill', 'true_nonce', true, true ); ?>
                                 <a href="<?php echo get_the_permalink( $id ) ?>" class="copy-link">
 									<?php _s( _i( 'copy' ) ) ?>
                                 </a>
                             </div>
-
+                            <input type="hidden" name="action" value="change_bill">
+                            <input type="hidden" name="bill_id" value="<?php echo $id ?>">
+							<?php wp_nonce_field( 'change_bill', 'true_nonce', true, true ); ?>
                         </div>
                     </form>
 				<?php endforeach; ?>

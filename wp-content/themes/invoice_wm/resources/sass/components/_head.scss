@@ -11,5 +11,9 @@
     padding-bottom: 12rem;
     min-height: 40rem;
     background: linear-gradient(180deg, #2C315D 0%, #1F223F 100%);
+    @media (max-width: 767px){
+      padding-bottom: 4rem;
+      min-height:auto;
+    }
   }
 }
