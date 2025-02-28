@@ -13,7 +13,9 @@ export const fancyboxInit = () => {
         if (href === undefined) return;
         const $el = $(document).find(href);
         if ($el.length === 0) return;
-        $.fancybox.open($el);
+        $.fancybox.open($el, {
+            touch: false
+        });
     });
     $(document).on('click', '.close-fancybox-modal', function (e) {
         e.preventDefault();

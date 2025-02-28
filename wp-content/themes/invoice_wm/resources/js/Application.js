@@ -4,6 +4,7 @@ import {numberInput} from "./forms/_number-input";
 import {showPassword} from "./forms/_show-password";
 import {fancyboxInit, showNotices} from "./plugins/_fancybox-init";
 import FormHandler from "./forms/FormHandler";
+import {autocompleteOffer} from "./components/_autocomplete-offer";
 export default class Application {
     constructor() {
         this.$doc = $(document);
@@ -27,6 +28,7 @@ export default class Application {
 
     initComponents() {
         this.$doc.ready(() => {
+            autocompleteOffer();
             accordion();
             numberInput();
             showPassword();

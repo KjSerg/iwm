@@ -14,9 +14,17 @@ $selected_currency = filter_input( INPUT_GET, 'currency' ) ?: '';
 ?>
     <section class="head-section section">
         <div class="container">
-            <div class="head__title">
-                Список
+            <div class="head-row">
+                <div class="head__title">
+                    Список
+                </div>
+                <a href="#modal-new-invoice" class="head-button fancybox">
+                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M9 0H7V7H0V9H7V16H9V9H16V7H9V0Z" fill="#C9CBE4"></path>
+                                </svg>
+                </a>
             </div>
+
         </div>
     </section>
 
@@ -75,5 +83,7 @@ $selected_currency = filter_input( INPUT_GET, 'currency' ) ?: '';
             </div>
         </div>
     </section>
+
+
 
 <?php get_footer();

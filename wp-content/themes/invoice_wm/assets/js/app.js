@@ -16387,6 +16387,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _forms_show_password__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./forms/_show-password */ "./resources/js/forms/_show-password.js");
 /* harmony import */ var _plugins_fancybox_init__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./plugins/_fancybox-init */ "./resources/js/plugins/_fancybox-init.js");
 /* harmony import */ var _forms_FormHandler__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./forms/FormHandler */ "./resources/js/forms/FormHandler.js");
+/* harmony import */ var _components_autocomplete_offer__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./components/_autocomplete-offer */ "./resources/js/components/_autocomplete-offer.js");
 /* provided dependency */ var $ = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
@@ -16394,6 +16395,7 @@ function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = 
 function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
 function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
 function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+
 
 
 
@@ -16428,6 +16430,7 @@ var Application = /*#__PURE__*/function () {
     value: function initComponents() {
       var _this = this;
       this.$doc.ready(function () {
+        (0,_components_autocomplete_offer__WEBPACK_IMPORTED_MODULE_6__.autocompleteOffer)();
         (0,_ui_accardion__WEBPACK_IMPORTED_MODULE_1__.accordion)();
         (0,_forms_number_input__WEBPACK_IMPORTED_MODULE_2__.numberInput)();
         (0,_forms_show_password__WEBPACK_IMPORTED_MODULE_3__.showPassword)();
@@ -16495,6 +16498,75 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Application__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Application */ "./resources/js/Application.js");
 
 var app = new _Application__WEBPACK_IMPORTED_MODULE_0__["default"]();
+
+/***/ }),
+
+/***/ "./resources/js/components/_autocomplete-offer.js":
+/*!********************************************************!*\
+  !*** ./resources/js/components/_autocomplete-offer.js ***!
+  \********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   autocompleteOffer: () => (/* binding */ autocompleteOffer)
+/* harmony export */ });
+/* harmony import */ var _utils_helpers__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils/_helpers */ "./resources/js/utils/_helpers.js");
+/* harmony import */ var _plugins_fancybox_init__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../plugins/_fancybox-init */ "./resources/js/plugins/_fancybox-init.js");
+/* provided dependency */ var $ = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
+
+
+var autocompleteOffer = function autocompleteOffer() {
+  $(document).on('input', '.autocomplete-offer', function () {
+    var $input = $(this);
+    var $list = $input.closest('.form-autocomplete').find('.form-autocomplete-list');
+    var $selected = $input.closest('.form-autocomplete').find('[name="selected_offers"]');
+    var val = $input.val().trim();
+    if (val.length < 3) {
+      $list.html('');
+      $list.hide();
+      return;
+    }
+    $.ajax({
+      type: "POST",
+      url: adminAjax,
+      data: {
+        action: 'get_offers_html',
+        val: val,
+        selected: $selected.val() || ''
+      }
+    }).done(function (response) {
+      $list.html(response);
+      if (response) {
+        $list.show();
+      } else {
+        $list.hide();
+      }
+    });
+  });
+  $(document).on('change', '.offer-checkbox', function () {
+    var $input = $(this);
+    var val = $input.val();
+    val = Number(val);
+    var $wrap = $input.closest('.form-autocomplete');
+    var $selected = $wrap.find('[name="selected_offers"]');
+    var $list = $wrap.find('.form-autocomplete-list');
+    var list = $selected.val();
+    var arr = list ? list.split(",") : [];
+    if (arr) arr = arr.map(function (item) {
+      return Number(item);
+    });
+    if ($input.prop('checked') === true) {
+      arr.push(val);
+    } else {
+      arr = arr.filter(function (item) {
+        return item !== val;
+      });
+    }
+    $selected.val(arr.join(','));
+  });
+};
 
 /***/ }),
 
@@ -16853,7 +16925,9 @@ var fancyboxInit = function fancyboxInit() {
     if (href === undefined) return;
     var $el = jquery__WEBPACK_IMPORTED_MODULE_0___default()(document).find(href);
     if ($el.length === 0) return;
-    jquery__WEBPACK_IMPORTED_MODULE_0___default().fancybox.open($el);
+    jquery__WEBPACK_IMPORTED_MODULE_0___default().fancybox.open($el, {
+      touch: false
+    });
   });
   jquery__WEBPACK_IMPORTED_MODULE_0___default()(document).on('click', '.close-fancybox-modal', function (e) {
     e.preventDefault();
