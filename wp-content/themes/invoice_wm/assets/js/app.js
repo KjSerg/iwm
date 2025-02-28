@@ -16525,9 +16525,10 @@ var autocompleteOffer = function autocompleteOffer() {
     var val = $input.val().trim();
     if (val.length < 3) {
       $list.html('');
-      $list.hide();
+      $list.slideUp();
       return;
     }
+    (0,_utils_helpers__WEBPACK_IMPORTED_MODULE_0__.showPreloader)();
     $.ajax({
       type: "POST",
       url: adminAjax,
@@ -16539,10 +16540,11 @@ var autocompleteOffer = function autocompleteOffer() {
     }).done(function (response) {
       $list.html(response);
       if (response) {
-        $list.show();
+        $list.slideDown();
       } else {
-        $list.hide();
+        $list.slideUp();
       }
+      (0,_utils_helpers__WEBPACK_IMPORTED_MODULE_0__.hidePreloader)();
     });
   });
   $(document).on('change', '.offer-checkbox', function () {

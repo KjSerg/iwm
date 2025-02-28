@@ -1,4 +1,4 @@
-import {isJsonString} from "../utils/_helpers";
+import {hidePreloader, isJsonString, showPreloader} from "../utils/_helpers";
 import {showMsg} from "../plugins/_fancybox-init";
 
 export const autocompleteOffer = () => {
@@ -9,9 +9,10 @@ export const autocompleteOffer = () => {
         let val = $input.val().trim();
         if (val.length < 3) {
             $list.html('');
-            $list.hide();
+            $list.slideUp();
             return;
         }
+        showPreloader();
         $.ajax({
             type: "POST",
             url: adminAjax,
@@ -21,10 +22,11 @@ export const autocompleteOffer = () => {
         }).done((response) => {
             $list.html(response);
             if (response) {
-                $list.show();
+                $list.slideDown();
             } else {
-                $list.hide();
+                $list.slideUp();
             }
+            hidePreloader();
         });
     });
     $(document).on('change', '.offer-checkbox', function () {

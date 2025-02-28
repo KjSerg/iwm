@@ -22,6 +22,61 @@ class Ajax {
 
 		add_action( 'wp_ajax_nopriv_get_offers_html', [ $this, 'get_offers_html' ] );
 		add_action( 'wp_ajax_get_offers_html', [ $this, 'get_offers_html' ] );
+
+		add_action( 'wp_ajax_nopriv_new_invoice', [ $this, 'new_invoice' ] );
+		add_action( 'wp_ajax_new_invoice', [ $this, 'new_invoice' ] );
+	}
+
+	function new_invoice(): void {
+		$user_id = get_current_user_id();
+		if ( ! $user_id ) {
+			$this->send_error( 'User error' );
+		}
+		$nonce = filter_input( INPUT_POST, 'true_nonce' );
+		if ( ! $nonce || ! wp_verify_nonce( $nonce, 'new_invoice' ) ) {
+			$this->send_error( 'Error request nonce' );
+		}
+		$post_title      = filter_input( INPUT_POST, 'post_title' );
+		$price           = filter_input( INPUT_POST, 'price', FILTER_VALIDATE_INT );
+		$currency        = filter_input( INPUT_POST, 'currency' );
+		$lang            = filter_input( INPUT_POST, 'lang' );
+		$text            = filter_input( INPUT_POST, 'text' );
+		$methods         = filter_input( INPUT_POST, 'method', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
+		$selected_offers = filter_input( INPUT_POST, 'selected_offers' );
+		if ( ! $post_title ) {
+			$this->send_error( 'ВВедіть заголовок' );
+		}
+		if ( ! $price ) {
+			$this->send_error( 'Введіть ціну' );
+		}
+		if ( ! $methods ) {
+			$this->send_error( 'Оберіть метод оплати' );
+		}
+		$selected  = $selected_offers ? explode( ',', $selected_offers ) : [];
+		$selected  = $selected ? array_map( 'intval', $selected ) : [];
+		$post_data = array(
+			'post_type'    => 'bill',
+			'post_title'   => $post_title,
+			'post_status'  => 'publish',
+			'post_content' => $text,
+		);
+		$_id       = wp_insert_post( $post_data );
+		$_post     = get_post( $_id );
+		if ( ! $_post ) {
+			$this->send_error( 'Error inserting post' );
+		}
+		carbon_set_post_meta( $_id, 'invoice_status', 'not_paid' );
+		carbon_set_post_meta( $_id, 'invoice_sum', $price );
+		carbon_set_post_meta( $_id, 'invoice_currency', $currency );
+		carbon_set_post_meta( $_id, 'invoice_pay_methods', $methods );
+		carbon_set_post_meta( $_id, 'invoice_offers', $selected_offers );
+		if ( function_exists( 'pll_set_post_language' ) ) {
+			pll_set_post_language( $_id, $lang );
+		}
+		$this->send_response( [
+			'id'  => $_id,
+			'url' => get_the_permalink( $_id ),
+		] );
 	}
 
 	public function get_offers_html(): void {

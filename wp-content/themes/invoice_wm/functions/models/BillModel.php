@@ -8,7 +8,8 @@ class BillModel {
 			'post_type'      => 'bill',
 			'posts_per_page' => $posts_per_page,
 			'post_status'    => 'publish',
-			'paged'          => $paged
+			'paged'          => $paged,
+			'lang' => ''
 		];
 		if (!empty($filters['status'])) {
 			$meta_query[] = [

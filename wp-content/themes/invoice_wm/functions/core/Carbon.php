@@ -88,6 +88,13 @@ class Carbon {
 				              'not_paid' => __( 'Not paid' ),
 				              'paid'     => __( 'Paid' ),
 			              ] ),
+			         Field::make( 'multiselect', 'invoice_pay_methods' )->set_width( 50 )
+			              ->set_required()
+			              ->set_options( [
+				              'wayforpay' => 'wayforpay',
+				              'whitepay'  => 'whitepay',
+			              ] ),
+			         Field::make( 'text', 'invoice_offers' )
 		         ] );
 	}
 

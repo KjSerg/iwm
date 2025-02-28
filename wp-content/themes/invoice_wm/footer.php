@@ -14,7 +14,7 @@ $user_id  = get_current_user_id();
 <?php if ( $user_id ): ?>
     <div id="modal-new-invoice" class="modal-window modal-new-invoice">
         <div class="modal-window__title modal__title text-center">Новий рахунок</div>
-        <form method="post" novalidate class="form-js form form-new-invoice">
+        <form method="post" novalidate class="form-js form form-new-invoice" id="new-invoice">
             <label class="form-label">
                 <span class="form-label-head">Назва або заголовок</span>
                 <input type="text" name="post_title" required>
@@ -82,6 +82,8 @@ $user_id  = get_current_user_id();
             <div class="modal-buttons">
                 <a href="#" class="button button--light">Відміна</a><button class="button">Створити</button>
             </div>
+            <input type="hidden" name="action" value="new_invoice">
+	        <?php wp_nonce_field( 'new_invoice', 'true_nonce', true, true ); ?>
         </form>
     </div>
 <?php endif; ?>
