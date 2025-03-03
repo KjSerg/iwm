@@ -43,6 +43,14 @@ class Carbon {
 		         ->add_fields( array(
 			         Field::make( 'image', 'logo' )->set_required(),
 		         ) );
+
+		Container::make( 'theme_options', 'Wayforpay Settings' )
+		         ->set_page_parent( 'options-general.php' )
+		         ->add_fields( array(
+			         Field::make( 'text', 'wayforpay_key' ),
+			         Field::make( 'text', 'wayforpay_account' ),
+			         Field::make( 'text', 'wayforpay_domain' ),
+		         ) );
 	}
 
 	public function filter_media_buttons_html( string $html, string $field_name ): ?string {
@@ -95,6 +103,32 @@ class Carbon {
 				              'whitepay'  => 'whitepay',
 			              ] ),
 			         Field::make( 'text', 'invoice_offers' )
+		         ] );
+		Container::make( 'post_meta', 'wayforpay' )
+		         ->where( 'post_type', '=', 'bill' )
+		         ->add_tab( 'Data', [
+			         Field::make( 'text', 'wayforpay_amount' ),
+			         Field::make( 'text', 'wayforpay_currency' ),
+			         Field::make( 'text', 'wayforpay_email' ),
+			         Field::make( 'text', 'wayforpay_phone' ),
+			         Field::make( 'text', 'wayforpay_transaction_status' ),
+			         Field::make( 'text', 'wayforpay_repay_url' ),
+			         Field::make( 'text', 'wayforpay_signature' ),
+		         ] )
+		         ->add_tab( 'Log', [
+			         Field::make( 'textarea', 'wayforpay_log' ),
+		         ] );
+
+		Container::make( 'post_meta', 'Views' )
+		         ->where( 'post_type', '=', 'bill' )
+		         ->add_fields( [
+			         Field::make( 'complex', 'bill_views' )
+			              ->add_fields( array(
+				              Field::make( 'text', 'ip' )->set_width( 25 ),
+				              Field::make( 'text', 'client' )->set_width( 25 ),
+				              Field::make( 'text', 'time' )->set_width( 25),
+				              Field::make( 'text', 'timestamp' )->set_width( 25),
+			              ) )
 		         ] );
 	}
 

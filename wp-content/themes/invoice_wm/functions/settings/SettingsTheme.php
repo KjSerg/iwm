@@ -112,11 +112,55 @@ class SettingsTheme {
 	}
 
 	public static function redirect_to_art(): void {
-		if(get_current_user_id()){
+		if ( get_current_user_id() ) {
 			return;
 		}
 		wp_redirect( 'https://web-mosaica.art/' );
 		exit();
+	}
+
+	public function views_hook(): void {
+		add_action( 'init', [ $this, 'start_session' ] );
+		add_action( 'wp', function () {
+			if ( is_single() ) {
+				$this->track_unique_views( get_the_ID() );
+			}
+		} );
+	}
+
+	public function start_session(): void {
+		if ( ! session_id() ) {
+			session_start();
+		}
+	}
+
+	private function track_unique_views( bool|int $post_id ): void {
+		if ( is_bot() ) {
+			return;
+		}
+		if ( ! is_single() || empty( $post_id ) || ! is_singular( 'bill' ) ) {
+			return;
+		}
+		if ( get_current_user_id() ) {
+			return;
+		}
+
+		$meta_key = 'unique_views_count';
+		if ( ! isset( $_SESSION['viewed_posts'] ) || ! in_array( $post_id, $_SESSION['viewed_posts'] ) ) {
+			$views = get_post_meta( $post_id, $meta_key, true );
+			$views = $views ? intval( $views ) : 0;
+			update_post_meta( $post_id, $meta_key, $views + 1 );
+			$_SESSION['viewed_posts'][] = $post_id;
+			$bill_views                 = carbon_get_post_meta( $post_id, 'bill_views' ) ?: [];
+			$temp                       = [
+				'ip'        => get_client_ip(),
+				'client'    => get_user_agent(),
+				'time'      => current_time( 'd-m-Y H:i' ),
+				'timestamp' => current_time( 'timestamp' ),
+			];
+			$bill_views[]               = $temp;
+			carbon_set_post_meta( $post_id, 'bill_views', $bill_views );
+		}
 	}
 }
 
@@ -131,3 +175,4 @@ $settings->archive_title_hook();
 $settings->association_field_title();
 $settings->get_attach_by_id_js();
 $settings->hide_admin_bar();
+$settings->views_hook();

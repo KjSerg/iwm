@@ -300,7 +300,6 @@ function get_post_author( $post_ID ): int|array|string {
 	return get_post_field( 'post_author', $post_ID );
 }
 
-
 function get_client_ip(): string {
 	if ( ! empty( $_SERVER['HTTP_CLIENT_IP'] ) ) {
 		return $_SERVER['HTTP_CLIENT_IP'];
@@ -331,4 +330,44 @@ function get__filter_link( $k = '', $v = '' ): ?string {
 		}
 	}
 	return $res;
+}
+
+function is_bot(): bool {
+	$userAgent = $_SERVER['HTTP_USER_AGENT'] ?? '';
+	$ipAddress = $_SERVER['REMOTE_ADDR'] ?? '';
+	$bots      = [
+		'bot',
+		'crawl',
+		'slurp',
+		'spider',
+		'mediapartners',
+		'google',
+		'bing',
+		'yandex',
+		'baidu',
+		'duckduck',
+		'teoma',
+		'sogou',
+		'exabot',
+		'facebook',
+		'ia_archiver',
+		'facebot',
+		'twitterbot'
+	];
+	$botIPs    = [
+		'66.249.66.1',
+		'64.233.173.193',
+		'157.55.39.0',
+		'207.46.13.0'
+	];
+	foreach ( $bots as $bot ) {
+		if ( stripos( $userAgent, $bot ) !== false ) {
+			return true;
+		}
+	}
+	if ( in_array( $ipAddress, $botIPs ) ) {
+		return true;
+	}
+
+	return false;
 }
