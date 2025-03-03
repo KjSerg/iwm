@@ -1,5 +1,6 @@
 import {isObjectEmpty, moveToElement, showPreloader} from "../utils/_helpers";
 import {showMsg, showNotices} from "../plugins/_fancybox-init";
+import responser from "./_responser";
 
 export default class FormHandler {
     constructor(selector) {
@@ -150,35 +151,7 @@ export default class FormHandler {
                 this.$document.find('body').removeClass('loading').removeClass('sending-form');
                 this.$document.find('.loading-button').removeClass('loading-button').removeClass('not-active');
                 this.$sendengForm.removeClass('sending');
-                if (isJson) {
-                    const data = JSON.parse(response);
-                    const message = data.msg || '';
-                    const text = data.msg_text || '';
-                    const type = data.type || '';
-                    const url = data.url || '';
-                    const reload = data.reload || '';
-                    if (message) {
-                        showMsg(message, text, url);
-                    }else {
-                        if (url) {
-                            showPreloader();
-                            window.location.href = url;
-                            return;
-                        }
-                    }
-                    if (reload === 'true') {
-                        if (message) {
-                            setTimeout(function () {
-                                window.location.reload();
-                            }, 10000);
-                            return;
-                        }
-                        window.location.reload();
-                        return;
-                    }
-                } else {
-                    showMsg(response);
-                }
+                responser(response);
 
             }
             this.hidePreloader();

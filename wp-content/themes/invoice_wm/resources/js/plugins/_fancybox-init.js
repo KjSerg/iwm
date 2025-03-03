@@ -23,9 +23,16 @@ export const fancyboxInit = () => {
     });
 };
 
+export const openModal = ($modal) => {
+    $.fancybox.open($modal, {
+        touch: false
+    });
+};
+
 export function showMsg(msg, title = '', url = '') {
     const selector = '#dialog';
     const $modal = $(document).find(selector);
+    console.log($modal)
     if ($modal.length === 0) {
         alert(msg);
         if (url) {

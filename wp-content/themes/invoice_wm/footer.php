@@ -80,11 +80,15 @@ $user_id  = get_current_user_id();
                 </div>
             </div>
             <div class="modal-buttons">
-                <a href="#" class="button button--light">Відміна</a><button class="button">Створити</button>
+                <a href="#" class="button button--light close-fancybox-modal">Відміна</a><button class="button">Створити</button>
             </div>
             <input type="hidden" name="action" value="new_invoice">
 	        <?php wp_nonce_field( 'new_invoice', 'true_nonce', true, true ); ?>
         </form>
+    </div>
+    <div id="modal-edit-invoice" class="modal-window modal-edit-invoice">
+        <div class="modal-window__title modal__title text-center">Редагувати рахунок</div>
+        <div class="modal-edit-invoice-container"></div>
     </div>
 <?php endif; ?>
 <div class="preloader" style="">

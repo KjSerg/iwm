@@ -16,8 +16,8 @@ class Bills {
                             <div class="archive-table__date"><?php echo get_the_date( 'H:i', $id ); ?></div>
                         </div>
                         <div class="archive-table-column">
-                            <a href="<?php echo get_the_permalink( $id ) . '?action=edit' ?>"
-                               class="archive-table-row__title">
+                            <a href="<?php echo admin_url( 'admin-ajax.php' ) . '?action=get_edit_invoice_form&id=' . $id ?>"
+                               class="archive-table-row__title edit-invoice-link">
 								<?php echo esc_html( $bill->post_title ) ?>
                             </a>
                         </div>

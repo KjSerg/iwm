@@ -25,6 +25,206 @@ class Ajax {
 
 		add_action( 'wp_ajax_nopriv_new_invoice', [ $this, 'new_invoice' ] );
 		add_action( 'wp_ajax_new_invoice', [ $this, 'new_invoice' ] );
+
+		add_action( 'wp_ajax_nopriv_get_edit_invoice_form', [ $this, 'get_edit_invoice_form' ] );
+		add_action( 'wp_ajax_get_edit_invoice_form', [ $this, 'get_edit_invoice_form' ] );
+
+		add_action( 'wp_ajax_nopriv_edit_invoice', [ $this, 'edit_invoice' ] );
+		add_action( 'wp_ajax_edit_invoice', [ $this, 'edit_invoice' ] );
+	}
+
+	function edit_invoice(): void {
+		$user_id = get_current_user_id();
+		if ( ! $user_id ) {
+			$this->send_error( 'User error' );
+		}
+		$nonce = filter_input( INPUT_POST, 'true_nonce' );
+		if ( ! $nonce || ! wp_verify_nonce( $nonce, 'edit_invoice' ) ) {
+			$this->send_error( 'Error request nonce' );
+		}
+		$id = filter_input( INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT );
+		if ( ! $id ) {
+			$this->send_error( 'ID error' );
+		}
+		$invoice = get_post( $id );
+		if ( ! $invoice ) {
+			$this->send_error( 'ID error' );
+		}
+		$invoice_status = carbon_get_post_meta( $id, 'invoice_status' ) ?: 'not_paid';
+		if ( $invoice_status == 'paid' ) {
+			$this->send_error( 'Вже оплачено!' );
+		}
+		$post_title      = filter_input( INPUT_POST, 'post_title' );
+		$price           = filter_input( INPUT_POST, 'price', FILTER_VALIDATE_INT );
+		$currency        = filter_input( INPUT_POST, 'currency' );
+		$lang            = filter_input( INPUT_POST, 'lang' );
+		$text            = filter_input( INPUT_POST, 'text' );
+		$methods         = filter_input( INPUT_POST, 'method', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
+		$selected_offers = filter_input( INPUT_POST, 'selected_offers' );
+		if ( ! $post_title ) {
+			$this->send_error( 'Введіть заголовок' );
+		}
+		if ( ! $price ) {
+			$this->send_error( 'Введіть ціну' );
+		}
+		if ( ! $methods ) {
+			$this->send_error( 'Оберіть метод оплати' );
+		}
+		$selected  = $selected_offers ? explode( ',', $selected_offers ) : [];
+		$selected  = $selected ? array_map( 'intval', $selected ) : [];
+		$post_data = array(
+			'ID'           => $id,
+			'post_type'    => 'bill',
+			'post_title'   => $post_title,
+			'post_status'  => 'publish',
+			'post_content' => $text,
+		);
+		$_id       = wp_update_post( $post_data );
+		$_post     = get_post( $_id );
+		if ( ! $_post ) {
+			$this->send_error( 'Error inserting post' );
+		}
+		carbon_set_post_meta( $_id, 'invoice_status', 'not_paid' );
+		carbon_set_post_meta( $_id, 'invoice_sum', $price );
+		carbon_set_post_meta( $_id, 'invoice_currency', $currency );
+		carbon_set_post_meta( $_id, 'invoice_pay_methods', $methods );
+		carbon_set_post_meta( $_id, 'invoice_offers', $selected_offers );
+		if ( function_exists( 'pll_set_post_language' ) ) {
+			pll_set_post_language( $_id, $lang );
+		}
+		$this->send_response( [
+			'id'  => $_id,
+			'url' => get_the_permalink( $_id ),
+		] );
+	}
+
+	function get_edit_invoice_form(): void {
+		$user_id = get_current_user_id();
+		if ( ! $user_id ) {
+			$this->send_error( 'User error' );
+		}
+		$id = filter_input( INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT );
+		if ( ! $id ) {
+			$this->send_error( 'ID error' );
+		}
+		$invoice = get_post( $id );
+		if ( ! $invoice ) {
+			$this->send_error( 'ID error' );
+		}
+		$invoice_status = carbon_get_post_meta( $id, 'invoice_status' ) ?: 'not_paid';
+		if ( $invoice_status == 'paid' ) {
+			$this->send_error( 'Вже оплачено!' );
+		}
+		ob_start();
+		$currency_selected = carbon_get_post_meta( $id, 'invoice_currency' );
+		$pay_methods       = carbon_get_post_meta( $id, 'invoice_pay_methods' ) ?: [];
+		$invoice_offers    = carbon_get_post_meta( $id, 'invoice_offers' ) ?: '';
+		$offers            = $invoice_offers ? self::get_pages_from_external_site( 'https://offer.web-mosaica.art/', '', $invoice_offers ) : [];
+		?>
+        <form method="post" novalidate class="form-js form form-edit-invoice no-reset" id="edit-invoice">
+        <label class="form-label">
+            <span class="form-label-head">Назва або заголовок</span>
+            <input type="text" name="post_title" required value="<?php echo esc_attr( get_the_title( $id ) ) ?>">
+        </label>
+        <label class="form-label">
+            <span class="form-label-head">Ціна</span>
+            <input type="number" min="1" name="price" required
+                   value="<?php echo esc_attr( carbon_get_post_meta( $id, 'invoice_sum' ) ) ?>">
+        </label>
+		<?php if ( $_currencies = get_invoice_currency() ): ?>
+            <label class="form-label">
+                <span class="form-label-head">Валюта</span>
+                <select name="currency" class="">
+					<?php
+					foreach ( $_currencies as $currency_code => $currency ) {
+						$inner = esc_html( $currency );
+						$attr  = $currency_code == $currency_selected ? ' selected="selected"' : '';
+						echo "<option $attr >$inner</option>";
+					}
+					?>
+                </select>
+            </label>
+		<?php endif; ?>
+		<?php if ( function_exists( 'pll_languages_list' ) ):
+			$post_language = pll_get_post_language( $id );
+			if ( $languages = pll_languages_list() ):
+				?>
+                <label class="form-label">
+                    <span class="form-label-head">Мова</span>
+                    <select name="lang" class="">
+						<?php
+						foreach ( $languages as $language ) {
+							$inner = esc_html( $language );
+							$attr  = $post_language == $language ? ' selected="selected"' : '';
+							echo "<option $attr >$inner</option>";
+						}
+						?>
+                    </select>
+                </label>
+			<?php endif; ?>
+		<?php endif; ?>
+        <label class="form-label">
+            <span class="form-label-head">Опис</span>
+            <textarea name="text"><?php echo esc_attr( strip_tags( get_content_by_id( $id ) ) ) ?></textarea>
+        </label>
+
+        <div class="form-list">
+            <span class="form-label-head">Опис</span>
+            <label class="form-list-item">
+                <input type="checkbox" name="method[]" value="wayforpay"
+					<?php echo in_array( 'wayforpay', $pay_methods ) ? 'checked' : ''; ?>
+                >
+                <span class="icon"></span>
+                <span class="text">wayforpay</span>
+
+            </label>
+            <label class="form-list-item">
+                <input type="checkbox" name="method[]" value="whitepay"
+					<?php echo in_array( 'whitepay', $pay_methods ) ? 'checked' : ''; ?>
+                >
+                <span class="icon"></span>
+                <span class="text">whitepay</span>
+            </label>
+        </div>
+        <div class="form-label">
+            <label for="autocomplete-offer" class="form-label-head">Офери</label>
+            <div class="form-autocomplete">
+                <input type="hidden" name="selected_offers" value="<?php echo esc_attr( $invoice_offers ) ?>">
+                <input type="text" placeholder="Введіть назву комерційної пропозиції" id="autocomplete-offer"
+                       class="autocomplete-offer">
+                <div class="form-list form-autocomplete-list"
+                     style="<?php echo ! $offers ? 'display:none;' : ''; ?>">
+					<?php
+					if ( $offers ) {
+						foreach ( $offers as $_id => $item ) {
+							$attr = 'checked';
+							?>
+                            <label class="form-list-item">
+                                <input type="checkbox" name="offer_id[]" class="offer-checkbox"
+									<?php echo $attr ?>
+                                       value="<?php echo $_id ?>">
+                                <span class="icon"></span>
+                                <span class="text"><?php echo $item['title'] ?></span>
+                            </label>
+							<?php
+						}
+					}
+					?>
+                </div>
+            </div>
+        </div>
+        <div class="modal-buttons">
+            <a href="#" class="button button--light close-fancybox-modal">Відміна</a>
+            <button class="button">Редагувати</button>
+        </div>
+        <input type="hidden" name="action" value="edit_invoice">
+        <input type="hidden" name="id" value="<?php echo esc_attr($id) ?>">
+		<?php wp_nonce_field( 'edit_invoice', 'true_nonce', true, true ); ?>
+        </form><?php
+		$content = ob_get_clean();
+		$this->send_response( [
+			'edit_form_html' => $content
+		] );
 	}
 
 	function new_invoice(): void {
@@ -105,18 +305,27 @@ class Ajax {
 		die();
 	}
 
-	public static function get_pages_from_external_site( $external_site_url, $search = '' ) {
+	public static function get_pages_from_external_site( $external_site_url = 'https://offer.web-mosaica.art/', $search = '', $ids = '' ) {
 		$url = trailingslashit( $external_site_url ) . 'wp-json/CommerciaOffer/v1/pages/';
 
 		if ( ! empty( $search ) ) {
 			$url = add_query_arg( 'search', urlencode( $search ), $url );
 		}
-
+		if ( ! empty( $ids ) ) {
+			$url = add_query_arg( 'ids', urlencode( $ids ), $url );
+		}
+		$key  = 'get_pages_from_external_site_' . md5( $url );
+		$data = get_transient( $key );
+		if ( $data !== false ) {
+			return $data;
+		}
+		error_log( 'get_pages_from_external_site: ' . $url );
 		$response = wp_remote_get( $url );
 
 		if ( is_wp_error( $response ) ) {
 			return [];
 		}
+		set_transient( $key, json_decode( wp_remote_retrieve_body( $response ), true ), 3600 );
 
 		return json_decode( wp_remote_retrieve_body( $response ), true );
 	}
@@ -155,11 +364,11 @@ class Ajax {
 		] );
 	}
 
-	private function send_error( string $message ): void {
+	private function send_error( string $message, string $text = '' ): void {
 		$this->send_response( [
 			'type'     => 'error',
 			'msg'      => $message,
-			'msg_text' => $message,
+			'msg_text' => $text,
 		] );
 	}
 

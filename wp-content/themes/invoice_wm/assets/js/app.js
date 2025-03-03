@@ -16388,6 +16388,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _plugins_fancybox_init__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./plugins/_fancybox-init */ "./resources/js/plugins/_fancybox-init.js");
 /* harmony import */ var _forms_FormHandler__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./forms/FormHandler */ "./resources/js/forms/FormHandler.js");
 /* harmony import */ var _components_autocomplete_offer__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./components/_autocomplete-offer */ "./resources/js/components/_autocomplete-offer.js");
+/* harmony import */ var _components_edit_link__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./components/_edit-link */ "./resources/js/components/_edit-link.js");
 /* provided dependency */ var $ = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
@@ -16395,6 +16396,7 @@ function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = 
 function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
 function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
 function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+
 
 
 
@@ -16435,6 +16437,7 @@ var Application = /*#__PURE__*/function () {
         (0,_forms_number_input__WEBPACK_IMPORTED_MODULE_2__.numberInput)();
         (0,_forms_show_password__WEBPACK_IMPORTED_MODULE_3__.showPassword)();
         (0,_plugins_fancybox_init__WEBPACK_IMPORTED_MODULE_4__.fancyboxInit)();
+        (0,_components_edit_link__WEBPACK_IMPORTED_MODULE_7__["default"])();
         _this.loadMore();
         _this.showLoaderOnClick();
         var form = new _forms_FormHandler__WEBPACK_IMPORTED_MODULE_5__["default"]('.form-js');
@@ -16572,6 +16575,44 @@ var autocompleteOffer = function autocompleteOffer() {
 
 /***/ }),
 
+/***/ "./resources/js/components/_edit-link.js":
+/*!***********************************************!*\
+  !*** ./resources/js/components/_edit-link.js ***!
+  \***********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ editInvoiceLink)
+/* harmony export */ });
+/* harmony import */ var _plugins_fancybox_init__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../plugins/_fancybox-init */ "./resources/js/plugins/_fancybox-init.js");
+/* harmony import */ var _forms_responser__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../forms/_responser */ "./resources/js/forms/_responser.js");
+/* harmony import */ var _utils_helpers__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/_helpers */ "./resources/js/utils/_helpers.js");
+/* provided dependency */ var $ = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
+
+
+
+function editInvoiceLink() {
+  $(document).on('click', '.edit-invoice-link', function (e) {
+    e.preventDefault();
+    var $t = $(this);
+    var href = $t.attr('href');
+    (0,_utils_helpers__WEBPACK_IMPORTED_MODULE_2__.showPreloader)();
+    $.ajax({
+      type: "POST",
+      url: href
+    }).done(function (response) {
+      if (response) {
+        (0,_forms_responser__WEBPACK_IMPORTED_MODULE_1__["default"])(response);
+      }
+      (0,_utils_helpers__WEBPACK_IMPORTED_MODULE_2__.hidePreloader)();
+    });
+  });
+}
+
+/***/ }),
+
 /***/ "./resources/js/forms/FormHandler.js":
 /*!*******************************************!*\
   !*** ./resources/js/forms/FormHandler.js ***!
@@ -16585,6 +16626,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _utils_helpers__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils/_helpers */ "./resources/js/utils/_helpers.js");
 /* harmony import */ var _plugins_fancybox_init__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../plugins/_fancybox-init */ "./resources/js/plugins/_fancybox-init.js");
+/* harmony import */ var _responser__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./_responser */ "./resources/js/forms/_responser.js");
 /* provided dependency */ var $ = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
@@ -16592,6 +16634,7 @@ function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = 
 function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
 function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
 function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+
 
 
 var FormHandler = /*#__PURE__*/function () {
@@ -16741,35 +16784,7 @@ var FormHandler = /*#__PURE__*/function () {
           _this2.$document.find('body').removeClass('loading').removeClass('sending-form');
           _this2.$document.find('.loading-button').removeClass('loading-button').removeClass('not-active');
           _this2.$sendengForm.removeClass('sending');
-          if (isJson) {
-            var data = JSON.parse(response);
-            var message = data.msg || '';
-            var text = data.msg_text || '';
-            var type = data.type || '';
-            var url = data.url || '';
-            var reload = data.reload || '';
-            if (message) {
-              (0,_plugins_fancybox_init__WEBPACK_IMPORTED_MODULE_1__.showMsg)(message, text, url);
-            } else {
-              if (url) {
-                (0,_utils_helpers__WEBPACK_IMPORTED_MODULE_0__.showPreloader)();
-                window.location.href = url;
-                return;
-              }
-            }
-            if (reload === 'true') {
-              if (message) {
-                setTimeout(function () {
-                  window.location.reload();
-                }, 10000);
-                return;
-              }
-              window.location.reload();
-              return;
-            }
-          } else {
-            (0,_plugins_fancybox_init__WEBPACK_IMPORTED_MODULE_1__.showMsg)(response);
-          }
+          (0,_responser__WEBPACK_IMPORTED_MODULE_2__["default"])(response);
         }
         _this2.hidePreloader();
       });
@@ -16864,6 +16879,66 @@ var numberInput = function numberInput() {
 
 /***/ }),
 
+/***/ "./resources/js/forms/_responser.js":
+/*!******************************************!*\
+  !*** ./resources/js/forms/_responser.js ***!
+  \******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ responser)
+/* harmony export */ });
+/* harmony import */ var _plugins_fancybox_init__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../plugins/_fancybox-init */ "./resources/js/plugins/_fancybox-init.js");
+/* harmony import */ var _utils_helpers__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/_helpers */ "./resources/js/utils/_helpers.js");
+/* provided dependency */ var $ = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
+
+
+function responser(response) {
+  var $document = $(document);
+  if (response) {
+    var isJson = (0,_utils_helpers__WEBPACK_IMPORTED_MODULE_1__.isJsonString)(response);
+    if (isJson) {
+      var data = JSON.parse(response);
+      var message = data.msg || '';
+      var text = data.msg_text || '';
+      var type = data.type || '';
+      var url = data.url || '';
+      var reload = data.reload || '';
+      var editFormHTML = data.edit_form_html || '';
+      var editFormID = data.edit_form_id || '';
+      if (message) {
+        (0,_plugins_fancybox_init__WEBPACK_IMPORTED_MODULE_0__.showMsg)(message, text, url);
+      } else {
+        if (url) {
+          (0,_utils_helpers__WEBPACK_IMPORTED_MODULE_1__.showPreloader)();
+          window.location.href = url;
+          return;
+        }
+      }
+      if (reload === 'true') {
+        if (message) {
+          setTimeout(function () {
+            window.location.reload();
+          }, 10000);
+          return;
+        }
+        window.location.reload();
+        return;
+      }
+      if (editFormHTML) {
+        $document.find('.modal-edit-invoice-container').html(editFormHTML);
+        (0,_plugins_fancybox_init__WEBPACK_IMPORTED_MODULE_0__.openModal)($('#modal-edit-invoice'));
+      }
+    } else {
+      (0,_plugins_fancybox_init__WEBPACK_IMPORTED_MODULE_0__.showMsg)(response);
+    }
+  }
+}
+
+/***/ }),
+
 /***/ "./resources/js/forms/_show-password.js":
 /*!**********************************************!*\
   !*** ./resources/js/forms/_show-password.js ***!
@@ -16906,6 +16981,7 @@ var showPassword = function showPassword() {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   fancyboxInit: () => (/* binding */ fancyboxInit),
+/* harmony export */   openModal: () => (/* binding */ openModal),
 /* harmony export */   showMsg: () => (/* binding */ showMsg),
 /* harmony export */   showNotices: () => (/* binding */ showNotices)
 /* harmony export */ });
@@ -16936,11 +17012,17 @@ var fancyboxInit = function fancyboxInit() {
     jquery__WEBPACK_IMPORTED_MODULE_0___default().fancybox.close();
   });
 };
+var openModal = function openModal($modal) {
+  jquery__WEBPACK_IMPORTED_MODULE_0___default().fancybox.open($modal, {
+    touch: false
+  });
+};
 function showMsg(msg) {
   var title = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
   var url = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : '';
   var selector = '#dialog';
   var $modal = jquery__WEBPACK_IMPORTED_MODULE_0___default()(document).find(selector);
+  console.log($modal);
   if ($modal.length === 0) {
     alert(msg);
     if (url) {

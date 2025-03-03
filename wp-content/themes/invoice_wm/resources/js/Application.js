@@ -5,6 +5,7 @@ import {showPassword} from "./forms/_show-password";
 import {fancyboxInit, showNotices} from "./plugins/_fancybox-init";
 import FormHandler from "./forms/FormHandler";
 import {autocompleteOffer} from "./components/_autocomplete-offer";
+import editInvoiceLink from "./components/_edit-link";
 export default class Application {
     constructor() {
         this.$doc = $(document);
@@ -33,6 +34,7 @@ export default class Application {
             numberInput();
             showPassword();
             fancyboxInit();
+            editInvoiceLink();
             this.loadMore();
             this.showLoaderOnClick();
             const form = new FormHandler('.form-js');
