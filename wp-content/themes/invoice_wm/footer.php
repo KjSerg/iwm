@@ -5,13 +5,31 @@ $assets   = $var['assets'];
 $url      = $var['url'];
 $url_home = $var['url_home'];
 $user_id  = get_current_user_id();
+$views    = 0;
+$id       = get_the_ID();
+
 ?>
 </main>
-<div id="dialog" class="modal-window modal-window-notice">
-    <div class="modal-window__title modal__title"></div>
-    <div class="modal-window__text modal__text"></div>
-</div>
-<?php if ( $user_id ): ?>
+<?php if ( $user_id && is_singular( 'bill' ) ): ?>
+    <footer class="footer footer--admin">
+        <div class="container">
+            <div class="footer-container">
+                <div class="footer-column">
+                    Всього переглядів:
+                    <strong>
+                        <a class="send-request"
+                           href="<?php echo admin_url( 'admin-ajax.php' ) . '?action=get_views&post_id=' . $id; ?>">
+							<?php echo get_number_views( $id ); ?>
+                        </a>
+                    </strong>
+                </div>
+                <div class="footer-column">
+                    Переглядають зараз: <strong
+                            class="live-users-count"><?php echo get_number_viewing( $id ); ?></strong>
+                </div>
+            </div>
+        </div>
+    </footer>
     <div id="modal-new-invoice" class="modal-window modal-new-invoice">
         <div class="modal-window__title modal__title text-center">Новий рахунок</div>
         <form method="post" novalidate class="form-js form form-new-invoice" id="new-invoice">
@@ -75,22 +93,31 @@ $user_id  = get_current_user_id();
                 <label for="autocomplete-offer" class="form-label-head">Офери</label>
                 <div class="form-autocomplete">
                     <input type="hidden" name="selected_offers">
-                    <input type="text" placeholder="Введіть назву комерційної пропозиції" id="autocomplete-offer" class="autocomplete-offer">
+                    <input type="text" placeholder="Введіть назву комерційної пропозиції" id="autocomplete-offer"
+                           class="autocomplete-offer">
                     <div class="form-list form-autocomplete-list" style="display:none;"></div>
                 </div>
             </div>
             <div class="modal-buttons">
-                <a href="#" class="button button--light close-fancybox-modal">Відміна</a><button class="button">Створити</button>
+                <a href="#" class="button button--light close-fancybox-modal">Відміна</a>
+                <button class="button">Створити</button>
             </div>
             <input type="hidden" name="action" value="new_invoice">
-	        <?php wp_nonce_field( 'new_invoice', 'true_nonce', true, true ); ?>
+			<?php wp_nonce_field( 'new_invoice', 'true_nonce', true, true ); ?>
         </form>
     </div>
     <div id="modal-edit-invoice" class="modal-window modal-edit-invoice">
         <div class="modal-window__title modal__title text-center">Редагувати рахунок</div>
         <div class="modal-edit-invoice-container"></div>
     </div>
+    <div id="modal-views" class="modal-window modal-views">
+        <div class="modal-views-container"></div>
+    </div>
 <?php endif; ?>
+<div id="dialog" class="modal-window modal-window-notice">
+    <div class="modal-window__title modal__title"></div>
+    <div class="modal-window__text modal__text"></div>
+</div>
 <div class="preloader" style="">
     <img src="<?php echo esc_url( $assets . 'img/loading.gif' ); ?>" alt="loading.gif">
 </div>

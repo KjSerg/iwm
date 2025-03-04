@@ -31,6 +31,109 @@ class Ajax {
 
 		add_action( 'wp_ajax_nopriv_edit_invoice', [ $this, 'edit_invoice' ] );
 		add_action( 'wp_ajax_edit_invoice', [ $this, 'edit_invoice' ] );
+
+		add_action( 'wp_ajax_nopriv_track_live_users', [ $this, 'track_live_users' ] );
+		add_action( 'wp_ajax_track_live_users', [ $this, 'track_live_users' ] );
+
+		add_action( 'wp_ajax_nopriv_remove_live_user', [ $this, 'remove_live_user' ] );
+		add_action( 'wp_ajax_remove_live_user', [ $this, 'remove_live_user' ] );
+
+		add_action( 'wp_ajax_nopriv_get_views', [ $this, 'get_views' ] );
+		add_action( 'wp_ajax_get_views', [ $this, 'get_views' ] );
+	}
+
+	public function get_views(): void {
+		$user_id = get_current_user_id();
+		if ( ! $user_id ) {
+			$this->send_error( 'User error' );
+		}
+		$post_id = isset( $_GET['post_id'] ) ? intval( $_GET['post_id'] ) : 0;
+		if ( ! $post_id ) {
+			$this->send_error( 'Invalid request' );
+		}
+		$views     = carbon_get_post_meta( $post_id, 'bill_views' ) ?: [];
+		$views_num = count( $views );
+		$viewing   = get_number_viewing( $post_id );
+		$html      = "
+        <div class='modal-window__title modal__title text-center'>Всього переглядів: $views_num</div>
+        <div class='modal-window__text modal__text text-center'>Переглядають зараз: $viewing</div>
+        ";
+		if ( $views ) {
+			$html .= '<div class="views">';
+			foreach ( $views as $view ) {
+				$ip      = $view['ip'];
+				$client  = $view['client'];
+				$time    = $view['time'];
+				$ip_city = $view['ip_city'];
+                $string = $ip;
+                if($ip_city){
+	                $string .= ' <br> ' . $ip_city;
+                }
+				if ( $ip && $client && $time ) {
+					$html .= '<div class="views-row">';
+					$html .= "<div class='views-column'>$time</div>";
+					$html .= "<div class='views-column'>$string</div>";
+					$html .= "<div class='views-column'>$client</div>";
+					$html .= '</div>';
+				}
+
+			}
+			$html .= '</div>';
+		}
+		$this->send_response( [
+			'views_html' => $html
+		] );
+	}
+
+	public function remove_live_user(): void {
+		$post_id    = isset( $_POST['post_id'] ) ? intval( $_POST['post_id'] ) : 0;
+		$session_id = isset( $_POST['session_id'] ) ? sanitize_text_field( $_POST['session_id'] ) : '';
+
+		if ( ! $post_id || ! $session_id ) {
+			$this->send_error( 'Invalid request' );
+		}
+
+		$user_key   = 'live_users_' . $post_id;
+		$live_users = get_transient( $user_key );
+
+		if ( $live_users && isset( $live_users[ $session_id ] ) ) {
+			unset( $live_users[ $session_id ] );
+			set_transient( $user_key, $live_users, 60 );
+		}
+
+		wp_send_json_success( [ 'message' => 'User removed' ] );
+	}
+
+
+	public function track_live_users(): void {
+		if ( is_bot() ) {
+			$this->send_error( 'Invalid request' );
+		}
+
+		if ( ! session_id() ) {
+			session_start();
+		}
+		$post_id    = isset( $_POST['post_id'] ) ? intval( $_POST['post_id'] ) : 0;
+		$session_id = isset( $_POST['session_id'] ) ? sanitize_text_field( $_POST['session_id'] ) : '';
+		if ( ! $post_id || ! $session_id ) {
+			$this->send_error( 'Invalid request' );
+		}
+		$user_key     = 'live_users_' . $post_id;
+		$current_time = time();
+		$live_users   = get_transient( $user_key );
+		if ( ! $live_users ) {
+			$live_users = [];
+		}
+		if ( ! get_current_user_id() ) {
+			$live_users[ $session_id ] = $current_time;
+		}
+		foreach ( $live_users as $session => $timestamp ) {
+			if ( $current_time - $timestamp > 30 ) {
+				unset( $live_users[ $session ] );
+			}
+		}
+		set_transient( $user_key, $live_users, 60 );
+		wp_send_json_success( [ 'users' => count( $live_users ) ] );
 	}
 
 	function edit_invoice(): void {
@@ -115,11 +218,11 @@ class Ajax {
 		if ( $invoice_status == 'paid' ) {
 			$this->send_error( 'Вже оплачено!' );
 		}
-		ob_start();
 		$currency_selected = carbon_get_post_meta( $id, 'invoice_currency' );
 		$pay_methods       = carbon_get_post_meta( $id, 'invoice_pay_methods' ) ?: [];
 		$invoice_offers    = carbon_get_post_meta( $id, 'invoice_offers' ) ?: '';
 		$offers            = $invoice_offers ? self::get_pages_from_external_site( 'https://offer.web-mosaica.art/', '', $invoice_offers ) : [];
+		ob_start();
 		?>
         <form method="post" novalidate class="form-js form form-edit-invoice no-reset" id="edit-invoice">
         <label class="form-label">
@@ -218,7 +321,7 @@ class Ajax {
             <button class="button">Редагувати</button>
         </div>
         <input type="hidden" name="action" value="edit_invoice">
-        <input type="hidden" name="id" value="<?php echo esc_attr($id) ?>">
+        <input type="hidden" name="id" value="<?php echo esc_attr( $id ) ?>">
 		<?php wp_nonce_field( 'edit_invoice', 'true_nonce', true, true ); ?>
         </form><?php
 		$content = ob_get_clean();

@@ -137,6 +137,7 @@ em, i {
 
 
 .modal{
+
   &-buttons{
     width: 100%;
     display: flex;
@@ -196,6 +197,10 @@ em, i {
         width: 100%;
       }
     }
+  }
+  &-views{
+    max-width: 100rem;
+    padding: 4rem 1rem;
   }
 }
 

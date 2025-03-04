@@ -2,9 +2,9 @@
 get_header();
 $logo = carbon_get_theme_option( 'logo' );
 $url  = site_url();
-?>
-
-<!doctype html>
+$id = get_the_ID();
+$body_attr = is_singular('bill') ? 'data-post-id="'.$id.'"' : '';
+?><!doctype html>
 <html <?php language_attributes(); ?>>
 <head>
     <meta charset="<?php bloginfo( 'charset' ); ?>">
@@ -21,7 +21,7 @@ $url  = site_url();
     <title><?php wp_title(); ?></title>
 	<?php wp_head(); ?>
 </head>
-<body>
+<body <?php echo $body_attr; ?>>
 <header class="header">
     <div class="container">
         <div class="header-container">

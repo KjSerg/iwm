@@ -127,7 +127,7 @@ class Carbon {
 				              Field::make( 'text', 'ip' )->set_width( 25 ),
 				              Field::make( 'text', 'client' )->set_width( 25 ),
 				              Field::make( 'text', 'time' )->set_width( 25),
-				              Field::make( 'text', 'timestamp' )->set_width( 25),
+				              Field::make( 'text', 'ip_city' )->set_width( 25),
 			              ) )
 		         ] );
 	}

@@ -8,6 +8,10 @@ class Bills {
 				<?php foreach ( $bills as $bill ) : $id = $bill->ID;
 					$selected_currency = carbon_get_post_meta( $id, 'invoice_currency' );
 					$invoice_status = carbon_get_post_meta( $id, 'invoice_status' ) ?: 'not_paid';
+                    $link = get_the_permalink($id);
+                    if($invoice_status == 'not_paid'){
+	                    $link = admin_url( 'admin-ajax.php' ) . '?action=get_edit_invoice_form&id=' . $id;
+                    }
 					?>
                     <form class="archive-table-row form-js no-reset <?php echo $invoice_status ?>"
                           id="archive-table-controls-<?php echo $id ?>" novalidate method="post">
@@ -16,8 +20,8 @@ class Bills {
                             <div class="archive-table__date"><?php echo get_the_date( 'H:i', $id ); ?></div>
                         </div>
                         <div class="archive-table-column">
-                            <a href="<?php echo admin_url( 'admin-ajax.php' ) . '?action=get_edit_invoice_form&id=' . $id ?>"
-                               class="archive-table-row__title edit-invoice-link">
+                            <a href="<?php echo esc_attr($link) ?>"
+                               class="archive-table-row__title <?php echo $invoice_status == 'not_paid' ? 'edit-invoice-link' : '' ?> ">
 								<?php echo esc_html( $bill->post_title ) ?>
                             </a>
                         </div>

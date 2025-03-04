@@ -6,6 +6,8 @@ import {fancyboxInit, showNotices} from "./plugins/_fancybox-init";
 import FormHandler from "./forms/FormHandler";
 import {autocompleteOffer} from "./components/_autocomplete-offer";
 import editInvoiceLink from "./components/_edit-link";
+import './components/_viewer';
+import responser from "./forms/_responser";
 export default class Application {
     constructor() {
         this.$doc = $(document);
@@ -27,6 +29,24 @@ export default class Application {
         }
     }
 
+    requestLinkInit(){
+        $(document).on('click', '.send-request', function (e) {
+            e.preventDefault();
+            const $t = $(this);
+            const url = $t.attr('href');
+            const type = $t.attr('data-type') || 'POST';
+            showPreloader();
+            $.ajax({
+                type, url
+            }).done((response) => {
+                if (response) {
+                    responser(response);
+                }
+                hidePreloader();
+            });
+        });
+    }
+
     initComponents() {
         this.$doc.ready(() => {
             autocompleteOffer();
@@ -36,6 +56,7 @@ export default class Application {
             fancyboxInit();
             editInvoiceLink();
             this.loadMore();
+            this.requestLinkInit();
             this.showLoaderOnClick();
             const form = new FormHandler('.form-js');
             this.$doc.on('click', '.copy-link', function (e) {

@@ -152,13 +152,14 @@ class SettingsTheme {
 			update_post_meta( $post_id, $meta_key, $views + 1 );
 			$_SESSION['viewed_posts'][] = $post_id;
 			$bill_views                 = carbon_get_post_meta( $post_id, 'bill_views' ) ?: [];
+			$city                       = get_client_city_by_ip( get_client_ip() );
 			$temp                       = [
-				'ip'        => get_client_ip(),
-				'client'    => get_user_agent(),
-				'time'      => current_time( 'd-m-Y H:i' ),
-				'timestamp' => current_time( 'timestamp' ),
+				'ip'      => get_client_ip(),
+				'client'  => get_user_agent(),
+				'time'    => current_time( 'd-m-Y H:i' ),
+				'ip_city' => $city,
 			];
-			$bill_views[]               = $temp;
+			array_unshift( $bill_views, $temp );
 			carbon_set_post_meta( $post_id, 'bill_views', $bill_views );
 		}
 	}

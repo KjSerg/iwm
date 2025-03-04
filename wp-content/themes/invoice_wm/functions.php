@@ -75,9 +75,8 @@ function wayforpay_payment_webhook_callback( WP_REST_Request $request ) {
 	carbon_set_post_meta( $order_id, 'wayforpay_phone', $phone );
 	carbon_set_post_meta( $order_id, 'wayforpay_transaction_status', $transactionStatus );
 	carbon_set_post_meta( $order_id, 'wayforpay_repay_url', $repayUrl );
-	if ( $transactionStatus == 'Approved' ) {
-		carbon_set_post_meta( $order_id, 'invoice_status', 'paid' );
-	}
+	$invoice_status = $transactionStatus == 'Approved' ? 'paid' : 'not_paid';
+	carbon_set_post_meta( $order_id, 'invoice_status', $invoice_status );
 	$time   = current_time( 'timestamp' );
 	$d      = [ $order, 'accept', $time ];
 	$string = implode( ';', $d );

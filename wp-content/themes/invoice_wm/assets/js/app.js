@@ -16389,6 +16389,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _forms_FormHandler__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./forms/FormHandler */ "./resources/js/forms/FormHandler.js");
 /* harmony import */ var _components_autocomplete_offer__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./components/_autocomplete-offer */ "./resources/js/components/_autocomplete-offer.js");
 /* harmony import */ var _components_edit_link__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./components/_edit-link */ "./resources/js/components/_edit-link.js");
+/* harmony import */ var _components_viewer__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./components/_viewer */ "./resources/js/components/_viewer.js");
+/* harmony import */ var _components_viewer__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_components_viewer__WEBPACK_IMPORTED_MODULE_8__);
+/* harmony import */ var _forms_responser__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./forms/_responser */ "./resources/js/forms/_responser.js");
 /* provided dependency */ var $ = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
@@ -16396,6 +16399,8 @@ function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = 
 function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
 function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
 function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+
+
 
 
 
@@ -16428,6 +16433,26 @@ var Application = /*#__PURE__*/function () {
       }
     }
   }, {
+    key: "requestLinkInit",
+    value: function requestLinkInit() {
+      $(document).on('click', '.send-request', function (e) {
+        e.preventDefault();
+        var $t = $(this);
+        var url = $t.attr('href');
+        var type = $t.attr('data-type') || 'POST';
+        (0,_utils_helpers__WEBPACK_IMPORTED_MODULE_0__.showPreloader)();
+        $.ajax({
+          type: type,
+          url: url
+        }).done(function (response) {
+          if (response) {
+            (0,_forms_responser__WEBPACK_IMPORTED_MODULE_9__["default"])(response);
+          }
+          (0,_utils_helpers__WEBPACK_IMPORTED_MODULE_0__.hidePreloader)();
+        });
+      });
+    }
+  }, {
     key: "initComponents",
     value: function initComponents() {
       var _this = this;
@@ -16439,6 +16464,7 @@ var Application = /*#__PURE__*/function () {
         (0,_plugins_fancybox_init__WEBPACK_IMPORTED_MODULE_4__.fancyboxInit)();
         (0,_components_edit_link__WEBPACK_IMPORTED_MODULE_7__["default"])();
         _this.loadMore();
+        _this.requestLinkInit();
         _this.showLoaderOnClick();
         var form = new _forms_FormHandler__WEBPACK_IMPORTED_MODULE_5__["default"]('.form-js');
         _this.$doc.on('click', '.copy-link', function (e) {
@@ -16610,6 +16636,43 @@ function editInvoiceLink() {
     });
   });
 }
+
+/***/ }),
+
+/***/ "./resources/js/components/_viewer.js":
+/*!********************************************!*\
+  !*** ./resources/js/components/_viewer.js ***!
+  \********************************************/
+/***/ (() => {
+
+document.addEventListener("DOMContentLoaded", function () {
+  var postId = parseInt(document.body.getAttribute("data-post-id"));
+  var userSessionId = Math.random().toString(36).substr(2, 9);
+  function updateLiveUsers() {
+    fetch(adminAjax, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded"
+      },
+      body: "action=track_live_users&post_id=".concat(postId, "&session_id=").concat(userSessionId)
+    }).then(function (response) {
+      return response.json();
+    }).then(function (data) {
+      if (data.success) {
+        console.log("Кількість активних користувачів:", data.data.users);
+        document.querySelectorAll('.live-users-count').forEach(function (item) {
+          item.innerText = data.data.users;
+        });
+      }
+    });
+  }
+  function removeUser() {
+    navigator.sendBeacon(adminAjax, "action=remove_live_user&post_id=".concat(postId, "&session_id=").concat(userSessionId));
+  }
+  updateLiveUsers();
+  setInterval(updateLiveUsers, 15000);
+  window.addEventListener("beforeunload", removeUser);
+});
 
 /***/ }),
 
@@ -16908,6 +16971,7 @@ function responser(response) {
       var reload = data.reload || '';
       var editFormHTML = data.edit_form_html || '';
       var editFormID = data.edit_form_id || '';
+      var viewsHTML = data.views_html || '';
       if (message) {
         (0,_plugins_fancybox_init__WEBPACK_IMPORTED_MODULE_0__.showMsg)(message, text, url);
       } else {
@@ -16930,6 +16994,10 @@ function responser(response) {
       if (editFormHTML) {
         $document.find('.modal-edit-invoice-container').html(editFormHTML);
         (0,_plugins_fancybox_init__WEBPACK_IMPORTED_MODULE_0__.openModal)($('#modal-edit-invoice'));
+      }
+      if (viewsHTML) {
+        $document.find('.modal-views-container').html(viewsHTML);
+        (0,_plugins_fancybox_init__WEBPACK_IMPORTED_MODULE_0__.openModal)($('#modal-views'));
       }
     } else {
       (0,_plugins_fancybox_init__WEBPACK_IMPORTED_MODULE_0__.showMsg)(response);

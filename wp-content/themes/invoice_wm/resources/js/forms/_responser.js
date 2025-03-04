@@ -14,6 +14,7 @@ export default function responser(response) {
             const reload = data.reload || '';
             const editFormHTML = data.edit_form_html || '';
             const editFormID = data.edit_form_id || '';
+            const viewsHTML = data.views_html || '';
             if (message) {
                 showMsg(message, text, url);
             } else {
@@ -33,9 +34,13 @@ export default function responser(response) {
                 window.location.reload();
                 return;
             }
-            if(editFormHTML){
+            if (editFormHTML) {
                 $document.find('.modal-edit-invoice-container').html(editFormHTML);
                 openModal($('#modal-edit-invoice'));
+            }
+            if (viewsHTML) {
+                $document.find('.modal-views-container').html(viewsHTML);
+                openModal($('#modal-views'));
             }
         } else {
             showMsg(response);

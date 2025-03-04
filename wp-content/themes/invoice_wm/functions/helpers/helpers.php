@@ -325,10 +325,11 @@ function get__filter_link( $k = '', $v = '' ): ?string {
 	$res               = $url;
 	if ( $k && $v ) {
 		$res .= '?' . $k . '=' . $v;
-		if($get_string){
+		if ( $get_string ) {
 			$res .= '&' . $get_string;
 		}
 	}
+
 	return $res;
 }
 
@@ -370,4 +371,52 @@ function is_bot(): bool {
 	}
 
 	return false;
+}
+
+function get_number_views( $id ): int {
+	return count( carbon_get_post_meta( $id, 'bill_views' ) ?: [] );
+}
+
+function get_number_viewing( $id ): int {
+	$user_key     = 'live_users_' . $id;
+	$current_time = time();
+	$live_users   = get_transient( $user_key );
+	if ( ! $live_users ) {
+		$live_users = [];
+	}
+	foreach ( $live_users as $session => $timestamp ) {
+		if ( $current_time - $timestamp > 30 ) {
+			unset( $live_users[ $session ] );
+		}
+	}
+
+	return count( $live_users );
+}
+
+function get_client_city_by_ip( $ip ): string {
+	if ( ! $ip ) {
+		return '';
+	}
+	$is_bot = preg_match(
+		"~(Google|Yahoo|Rambler|Bot|Yandex|Spider|Snoopy|Crawler|Finder|Mail|curl)~i",
+		$_SERVER['HTTP_USER_AGENT']
+	);
+	if ( is_bot() ) {
+		return '';
+	}
+	$key       = 'get_city_by_ip_' . md5( $ip );
+	$transient = get_transient( $key );
+	if ( $transient !== false ) {
+		return $transient;
+	}
+	$geo = json_decode( file_get_contents( 'http://api.sypexgeo.net/qe4zd/json/' . $ip ), true );
+	$res = $geo['city'] ? $geo['city']['name_ru'] : '';
+	if ( $geo['country']['name_ru'] ) {
+		$res .= $res ? ', ' : '';
+		$res .= $geo['country']['name_ru'];
+	}
+	set_transient( $key, $res, ( HOUR_IN_SECONDS * 24 * 7 ) );
+
+	return $res;
+
 }
