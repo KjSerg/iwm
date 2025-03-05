@@ -52,6 +52,13 @@
       &.paid{
         background: aquamarine;
       }
+      &.pending{
+        pointer-events: none;
+        opacity: 0.5;
+        a {
+          pointer-events: auto;
+        }
+      }
       &__title{
         color: #333;
         font-size: 1.8rem;

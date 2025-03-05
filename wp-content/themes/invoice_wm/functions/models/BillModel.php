@@ -7,7 +7,7 @@ class BillModel {
 		$query_args = [
 			'post_type'      => 'bill',
 			'posts_per_page' => $posts_per_page,
-			'post_status'    => 'publish',
+			'post_status'    => ['publish', 'pending'],
 			'paged'          => $paged,
 			'lang' => ''
 		];

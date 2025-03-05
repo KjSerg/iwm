@@ -104,7 +104,6 @@ class Ajax {
 		wp_send_json_success( [ 'message' => 'User removed' ] );
 	}
 
-
 	public function track_live_users(): void {
 		if ( is_bot() ) {
 			$this->send_error( 'Invalid request' );
@@ -376,6 +375,8 @@ class Ajax {
 		if ( function_exists( 'pll_set_post_language' ) ) {
 			pll_set_post_language( $_id, $lang );
 		}
+        $deletion_time = HOUR_IN_SECONDS * 24 * 5;
+        CustomCron::schedule_post_deletion($_id, $deletion_time);
 		$this->send_response( [
 			'id'  => $_id,
 			'url' => get_the_permalink( $_id ),
@@ -491,7 +492,6 @@ class Ajax {
 
 		return media_handle_upload( $file_handler, $post_id );
 	}
-
 
 }
 

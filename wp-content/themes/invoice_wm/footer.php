@@ -10,26 +10,31 @@ $id       = get_the_ID();
 
 ?>
 </main>
-<?php if ( $user_id && is_singular( 'bill' ) ): ?>
-    <footer class="footer footer--admin">
-        <div class="container">
-            <div class="footer-container">
-                <div class="footer-column">
-                    Всього переглядів:
-                    <strong>
-                        <a class="send-request"
-                           href="<?php echo admin_url( 'admin-ajax.php' ) . '?action=get_views&post_id=' . $id; ?>">
-							<?php echo get_number_views( $id ); ?>
-                        </a>
-                    </strong>
-                </div>
-                <div class="footer-column">
-                    Переглядають зараз: <strong
-                            class="live-users-count"><?php echo get_number_viewing( $id ); ?></strong>
+<?php if ( $user_id ): ?>
+	<?php if ( is_singular( 'bill' ) ): ?>
+        <footer class="footer footer--admin">
+            <div class="container">
+                <div class="footer-container">
+                    <div class="footer-column">
+                        Всього переглядів:
+                        <strong>
+                            <a class="send-request"
+                               href="<?php echo admin_url( 'admin-ajax.php' ) . '?action=get_views&post_id=' . $id; ?>">
+								<?php echo get_number_views( $id ); ?>
+                            </a>
+                        </strong>
+                    </div>
+                    <div class="footer-column">
+                        Переглядають зараз: <strong
+                                class="live-users-count"><?php echo get_number_viewing( $id ); ?></strong>
+                    </div>
                 </div>
             </div>
+        </footer>
+        <div id="modal-views" class="modal-window modal-views">
+            <div class="modal-views-container"></div>
         </div>
-    </footer>
+	<?php endif; ?>
     <div id="modal-new-invoice" class="modal-window modal-new-invoice">
         <div class="modal-window__title modal__title text-center">Новий рахунок</div>
         <form method="post" novalidate class="form-js form form-new-invoice" id="new-invoice">
@@ -110,9 +115,7 @@ $id       = get_the_ID();
         <div class="modal-window__title modal__title text-center">Редагувати рахунок</div>
         <div class="modal-edit-invoice-container"></div>
     </div>
-    <div id="modal-views" class="modal-window modal-views">
-        <div class="modal-views-container"></div>
-    </div>
+
 <?php endif; ?>
 <div id="dialog" class="modal-window modal-window-notice">
     <div class="modal-window__title modal__title"></div>

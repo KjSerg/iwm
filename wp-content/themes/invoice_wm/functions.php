@@ -9,6 +9,7 @@ add_action( 'wp_enqueue_scripts', 'invoice_wm_scripts' );
 
 get_template_part( 'functions/core/Carbon' );
 get_template_part( 'functions/core/Ajax' );
+get_template_part( 'functions/core/CustomCron' );
 get_template_part( 'functions/features/Columns' );
 get_template_part( 'functions/helpers/helpers' );
 get_template_part( 'functions/settings/SettingsTheme' );
@@ -77,6 +78,14 @@ function wayforpay_payment_webhook_callback( WP_REST_Request $request ) {
 	carbon_set_post_meta( $order_id, 'wayforpay_repay_url', $repayUrl );
 	$invoice_status = $transactionStatus == 'Approved' ? 'paid' : 'not_paid';
 	carbon_set_post_meta( $order_id, 'invoice_status', $invoice_status );
+	if($transactionStatus == 'Approved'){
+		$post_data = array(
+			'ID'          => $order_id,
+			'post_status' => 'publish',
+		);
+		wp_update_post( $post_data );
+		\InvoiceWM\core\CustomCron::cancel_post_deletion($order_id);
+	}
 	$time   = current_time( 'timestamp' );
 	$d      = [ $order, 'accept', $time ];
 	$string = implode( ';', $d );
