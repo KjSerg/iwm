@@ -25,7 +25,7 @@ add_action( 'rest_api_init', function () {
 	] );
 } );
 
-function wayforpay_payment_webhook_callback( WP_REST_Request $request ) {
+function wayforpay_payment_webhook_callback( WP_REST_Request $request ): void {
 	$payload   = file_get_contents( "php://input" );
 	$obj       = json_decode( $payload, true );
 	$order     = $obj['orderReference'];
