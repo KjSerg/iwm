@@ -1,6 +1,9 @@
 <?php
 
 namespace InvoiceWM\core;
+
+use InvoiceWM\Components\Offers;
+
 class Ajax {
 	private static ?self $instance = null;
 
@@ -65,10 +68,10 @@ class Ajax {
 				$client  = $view['client'];
 				$time    = $view['time'];
 				$ip_city = $view['ip_city'];
-                $string = $ip;
-                if($ip_city){
-	                $string .= ' <br> ' . $ip_city;
-                }
+				$string  = $ip;
+				if ( $ip_city ) {
+					$string .= ' <br> ' . $ip_city;
+				}
 				if ( $ip && $client && $time ) {
 					$html .= '<div class="views-row">';
 					$html .= "<div class='views-column'>$time</div>";
@@ -220,7 +223,7 @@ class Ajax {
 		$currency_selected = carbon_get_post_meta( $id, 'invoice_currency' );
 		$pay_methods       = carbon_get_post_meta( $id, 'invoice_pay_methods' ) ?: [];
 		$invoice_offers    = carbon_get_post_meta( $id, 'invoice_offers' ) ?: '';
-		$offers            = $invoice_offers ? self::get_pages_from_external_site( 'https://offer.web-mosaica.art/', '', $invoice_offers ) : [];
+		$offers            = $invoice_offers ? Offers::get_offers( 'https://offer.web-mosaica.art/', '', $invoice_offers ) : [];
 		ob_start();
 		?>
         <form method="post" novalidate class="form-js form form-edit-invoice no-reset" id="edit-invoice">
@@ -270,24 +273,8 @@ class Ajax {
             <textarea name="text"><?php echo esc_attr( strip_tags( get_content_by_id( $id ) ) ) ?></textarea>
         </label>
 
-        <div class="form-list">
-            <span class="form-label-head">Опис</span>
-            <label class="form-list-item">
-                <input type="checkbox" name="method[]" value="wayforpay"
-					<?php echo in_array( 'wayforpay', $pay_methods ) ? 'checked' : ''; ?>
-                >
-                <span class="icon"></span>
-                <span class="text">wayforpay</span>
 
-            </label>
-            <label class="form-list-item">
-                <input type="checkbox" name="method[]" value="whitepay"
-					<?php echo in_array( 'whitepay', $pay_methods ) ? 'checked' : ''; ?>
-                >
-                <span class="icon"></span>
-                <span class="text">whitepay</span>
-            </label>
-        </div>
+		<?php the_payment_methods($pay_methods) ?>
         <div class="form-label">
             <label for="autocomplete-offer" class="form-label-head">Офери</label>
             <div class="form-autocomplete">
@@ -375,8 +362,8 @@ class Ajax {
 		if ( function_exists( 'pll_set_post_language' ) ) {
 			pll_set_post_language( $_id, $lang );
 		}
-        $deletion_time = HOUR_IN_SECONDS * 24 * 5;
-        CustomCron::schedule_post_deletion($_id, $deletion_time);
+		$deletion_time = HOUR_IN_SECONDS * 24 * 5;
+		CustomCron::schedule_post_deletion( $_id, $deletion_time );
 		$this->send_response( [
 			'id'  => $_id,
 			'url' => get_the_permalink( $_id ),
@@ -391,7 +378,7 @@ class Ajax {
 		}
 		$selected = $selected ? explode( ',', $selected ) : [];
 		$selected = $selected ? array_map( 'intval', $selected ) : [];
-		$res      = self::get_pages_from_external_site( 'https://offer.web-mosaica.art/', $val );
+		$res = Offers::get_offers( 'https://offer.web-mosaica.art/', $val );
 		if ( $res ) {
 			foreach ( $res as $id => $item ) {
 				$attr = in_array( $id, $selected ) ? 'checked' : '';
@@ -409,30 +396,6 @@ class Ajax {
 		die();
 	}
 
-	public static function get_pages_from_external_site( $external_site_url = 'https://offer.web-mosaica.art/', $search = '', $ids = '' ) {
-		$url = trailingslashit( $external_site_url ) . 'wp-json/CommerciaOffer/v1/pages/';
-
-		if ( ! empty( $search ) ) {
-			$url = add_query_arg( 'search', urlencode( $search ), $url );
-		}
-		if ( ! empty( $ids ) ) {
-			$url = add_query_arg( 'ids', urlencode( $ids ), $url );
-		}
-		$key  = 'get_pages_from_external_site_' . md5( $url );
-		$data = get_transient( $key );
-		if ( $data !== false ) {
-			return $data;
-		}
-		error_log( 'get_pages_from_external_site: ' . $url );
-		$response = wp_remote_get( $url );
-
-		if ( is_wp_error( $response ) ) {
-			return [];
-		}
-		set_transient( $key, json_decode( wp_remote_retrieve_body( $response ), true ), 3600 );
-
-		return json_decode( wp_remote_retrieve_body( $response ), true );
-	}
 
 	public function change_bill(): void {
 		$response = [];

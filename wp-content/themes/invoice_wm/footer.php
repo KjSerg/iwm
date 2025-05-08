@@ -79,21 +79,7 @@ $id       = get_the_ID();
                 <span class="form-label-head">Опис</span>
                 <textarea name="text"></textarea>
             </label>
-
-            <div class="form-list">
-                <span class="form-label-head">Опис</span>
-                <label class="form-list-item">
-                    <input type="checkbox" name="method[]" value="wayforpay" checked>
-                    <span class="icon"></span>
-                    <span class="text">wayforpay</span>
-
-                </label>
-                <label class="form-list-item">
-                    <input type="checkbox" name="method[]" value="whitepay" checked>
-                    <span class="icon"></span>
-                    <span class="text">whitepay</span>
-                </label>
-            </div>
+	        <?php the_payment_methods() ?>
             <div class="form-label">
                 <label for="autocomplete-offer" class="form-label-head">Офери</label>
                 <div class="form-autocomplete">

@@ -16,6 +16,9 @@ body {
   font-style: normal;
   font-weight: 400;
   line-height: 140%;
+  &.single-bill{
+    background: #F2F3F9;
+  }
 }
 
 html, body {
@@ -256,4 +259,169 @@ select{
 
 .text-center{
   text-align: center;
+}
+
+
+.text {
+  color: #888;
+  font-size: 1.6rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 180%;
+
+  &--columns {
+    column-count: 2;
+    column-gap: 6rem;
+    @media (max-width: 768px) {
+      column-gap: 3rem;
+    }
+    @media (max-width: 600px) {
+      column-count: 1;
+    }
+  }
+
+
+  ol {
+    counter-reset: list;
+
+    li {
+      &:not(:last-child) {
+        margin-bottom: 1.4rem;
+      }
+
+      list-style-type: none;
+      position: relative;
+      padding-left: 2rem;
+
+      &:before {
+        position: absolute;
+        left: 0;
+
+        counter-increment: list;
+
+        content: counter(list) ". ";
+
+        color: #E32A2F;
+      }
+    }
+  }
+
+  h6 {
+    color: #0C0E12;
+    font-size: 2.4rem;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 3rem;
+    text-transform: uppercase;
+    @media (max-width: 768px) {
+      font-size: 2rem;
+    }
+  }
+
+  h5 {
+    color: #0C0E12;
+    font-size: 2.6rem;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 3.4rem;
+    @media (max-width: 768px) {
+      font-size: 2.2rem;
+      line-height: 3rem;
+    }
+  }
+
+  h4 {
+    color: #0C0E12;
+    font-size: 3rem;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 4rem;
+    @media (max-width: 768px) {
+      font-size: 2.6rem;
+      line-height: 3rem;
+    }
+  }
+
+  h3 {
+    color: #0c0e12;
+    font-size: 4rem;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 4.8rem;
+    margin-bottom: 4rem;
+    text-transform: uppercase;
+    @media (max-width: 768px) {
+      font-size: 3rem;
+      line-height: 4rem;
+    }
+  }
+
+  h2 {
+    color: #0C0E12;
+    font-size: 4rem;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 5rem;
+    @media (max-width: 768px) {
+      font-size: 3.2rem;
+      line-height: 4rem;
+    }
+  }
+
+  h1 {
+    color: #0C0E12;
+    font-size: 4.4rem;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 5rem;
+    @media (max-width: 768px) {
+      font-size: 3.4rem;
+      line-height: 4rem;
+    }
+  }
+
+  & > * {
+    &:not(:last-child) {
+      margin-bottom: 1.6rem;
+      @media (max-width: 768px) {
+        margin-bottom: 1.2rem;
+      }
+    }
+  }
+
+  a {
+    color: #628EFF;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  ul {
+    li {
+      position: relative;
+      padding-left: 2.2rem;
+
+      &:before {
+        display: block;
+        content: '/';
+        position: absolute;
+        top: 0;
+        left: 0;
+        color:#E43E59;
+        font-size: 1.6rem;
+        font-style: normal;
+        font-weight: 700;
+        line-height: 2rem;
+      }
+
+      &:not(:last-child) {
+        margin-bottom: 1.4rem;
+        @media (max-width: 768px) {
+          margin-bottom: 1rem;
+        }
+      }
+    }
+  }
+
 }

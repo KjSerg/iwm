@@ -12,6 +12,10 @@ class Carbon {
 //	private array $labels;
 //	private array $screens_labels;
 	private array $fields_without_button;
+	/**
+	 * @var array|string[]
+	 */
+	private array $labels;
 
 	private function __construct() {
 		$this->initialize_labels();
@@ -51,6 +55,16 @@ class Carbon {
 			         Field::make( 'text', 'wayforpay_account' ),
 			         Field::make( 'text', 'wayforpay_domain' ),
 		         ) );
+
+		Container::make( 'theme_options', 'Order Settings' )
+		         ->set_page_parent( 'options-general.php' )
+		         ->add_fields( array(
+			         Field::make( 'complex', 'payment_methods' )
+			              ->add_fields( array(
+				              Field::make( 'image', 'image', __( 'Logo' ) )->set_required( true )->set_width( 50 ),
+				              Field::make( 'text', 'title', __( 'Title' ) )->set_required( true )->set_width( 50 ),
+			              ) )
+		         ) );
 	}
 
 	public function filter_media_buttons_html( string $html, string $field_name ): ?string {
@@ -62,20 +76,10 @@ class Carbon {
 	}
 
 	private function initialize_labels(): void {
-//		$this->labels = [
-//			'plural_name'   => 'items',
-//			'singular_name' => 'item',
-//		];
-//
-//		$this->screens_labels = [
-//			'plural_name'   => 'screens',
-//			'singular_name' => 'screen',
-//		];
-//
-//		$this->types_labels = [
-//			'plural_name'   => 'types',
-//			'singular_name' => 'type',
-//		];
+		$this->labels = [
+			'plural_name'   => 'items',
+			'singular_name' => 'item',
+		];
 
 		$this->fields_without_button = [ 'text', 'subtitle', 'title' ];
 	}
@@ -98,10 +102,7 @@ class Carbon {
 			              ] ),
 			         Field::make( 'multiselect', 'invoice_pay_methods' )->set_width( 50 )
 			              ->set_required()
-			              ->set_options( [
-				              'wayforpay' => 'wayforpay',
-				              'whitepay'  => 'whitepay',
-			              ] ),
+			              ->set_options( [ $this, 'get_payment_method' ] ),
 			         Field::make( 'text', 'invoice_offers' )
 		         ] );
 		Container::make( 'post_meta', 'wayforpay' )
@@ -126,8 +127,8 @@ class Carbon {
 			              ->add_fields( array(
 				              Field::make( 'text', 'ip' )->set_width( 25 ),
 				              Field::make( 'text', 'client' )->set_width( 25 ),
-				              Field::make( 'text', 'time' )->set_width( 25),
-				              Field::make( 'text', 'ip_city' )->set_width( 25),
+				              Field::make( 'text', 'time' )->set_width( 25 ),
+				              Field::make( 'text', 'ip_city' )->set_width( 25 ),
 			              ) )
 		         ] );
 	}
@@ -137,6 +138,18 @@ class Carbon {
 			get_template_part( 'vendor/autoload' );
 			\Carbon_Fields\Carbon_Fields::boot();
 		}
+	}
+
+	public static function get_payment_method(): array {
+		$res             = [];
+		$payment_methods = carbon_get_theme_option( 'payment_methods' );
+		if ( ! empty( $payment_methods ) ) {
+			foreach ( $payment_methods as $method ) {
+				$res[ $method['title'] ] = $method['title'];
+			}
+		}
+
+		return $res;
 	}
 
 }

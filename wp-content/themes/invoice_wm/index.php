@@ -1,5 +1,8 @@
 <?php
-
+if(!is_front_page()) {
+    the_page();
+    die();
+}
 use InvoiceWM\controller\BillController;
 
 \Invoice\settings\SettingsTheme::redirect_to_art();
@@ -83,7 +86,5 @@ $selected_currency = filter_input( INPUT_GET, 'currency' ) ?: '';
             </div>
         </div>
     </section>
-
-
 
 <?php get_footer();

@@ -21,7 +21,7 @@ $body_attr = is_singular('bill') ? 'data-post-id="'.$id.'"' : '';
     <title><?php wp_title(); ?></title>
 	<?php wp_head(); ?>
 </head>
-<body <?php echo $body_attr; ?>>
+<body <?php echo $body_attr; ?> <?php body_class(); ?>>
 <header class="header">
     <div class="container">
         <div class="header-container">

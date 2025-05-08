@@ -30,7 +30,6 @@ class CustomCron {
 		}
 	}
 
-
 	private function __construct() {
 		$this->initialize_actions();
 	}
@@ -38,7 +37,6 @@ class CustomCron {
 	private function initialize_actions(): void {
 		add_action( 'delete_scheduled_post', [ $this, 'delete_post_by_id' ] );
 	}
-
 
 	public function delete_post_by_id( $post_id ): void {
 		if ( get_post( $post_id ) ) {

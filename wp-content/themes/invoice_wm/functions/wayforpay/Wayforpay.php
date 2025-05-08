@@ -88,7 +88,7 @@ class Wayforpay {
 		$this->domain  = carbon_get_theme_option( 'wayforpay_domain' );
 	}
 
-	private function test() {
+	private function test(): void {
 		if ( ! $this->key ) {
 			error_log( 'Key empty' );
 			throw new \InvalidArgumentException( "Key empty" );
@@ -107,7 +107,7 @@ class Wayforpay {
 		}
 	}
 
-	private function set_signature( bool|string $hash ) {
+	private function set_signature( bool|string $hash ): void {
 		carbon_set_post_meta( $this->order_id, 'wayforpay_signature', $hash );
 	}
 }
