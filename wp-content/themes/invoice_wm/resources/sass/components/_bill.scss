@@ -63,6 +63,26 @@
     margin: -9rem auto 0;
     background: #FFF;
 
+    &__icon{
+      margin: 0 auto 4rem;
+      display: flex;
+      width: 16rem;
+      height: 16rem;
+      padding: 5.8rem;
+      justify-content: center;
+      align-items: center;
+      border-radius: 50%;
+      background: rgba(201, 8, 95, 0.10);
+    }
+    &__logo{
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 4rem;
+      width: 12.6rem;
+      height: 4rem;
+    }
+
     &-body {
       padding: 2.8rem 4rem 4rem;
       @media (max-height: 800px) {

@@ -18,6 +18,7 @@ get_template_part( 'functions/components/components' );
 get_template_part( 'functions/components/Offers' );
 get_template_part( 'functions/translations/translations' );
 get_template_part( 'functions/translations/translator' );
+get_template_part( 'functions/bill/Bill' );
 require_once get_template_directory() . '/functions/view/Bills.php';
 require_once get_template_directory() . '/functions/models/BillModel.php';
 require_once get_template_directory() . '/functions/controllers/BillController.php';
