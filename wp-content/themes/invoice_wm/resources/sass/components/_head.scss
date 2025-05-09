@@ -55,5 +55,9 @@
       padding-bottom: 4rem;
       min-height: auto;
     }
+    @media (max-height: 800px) {
+      padding-bottom: 4rem;
+      min-height: auto;
+    }
   }
 }

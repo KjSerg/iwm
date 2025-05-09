@@ -1,7 +1,19 @@
-.bill{
-  &-offers{
-    &-item{
-      &__icon{
+.bill {
+  &-consent{
+    margin-bottom: 2rem;
+  }
+  &-finish {
+    color: #202554;
+    text-align: center;
+    font-size: 1.4rem;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 180%;
+  }
+
+  &-offers {
+    &-item {
+      &__icon {
         width: 2.4rem;
         height: 2.4rem;
         display: flex;
@@ -11,7 +23,8 @@
         flex-grow: 0;
         flex-shrink: 0;
       }
-      &__link{
+
+      &__link {
         display: flex;
         color: #5261DF;
         font-size: 1.6rem;
@@ -19,16 +32,22 @@
         font-weight: 500;
         line-height: 160%;
       }
-      &:not(:last-child){
+
+      &:not(:last-child) {
         margin-bottom: 1rem;
       }
     }
   }
-  &__description{
-    margin-bottom: 1.5rem;
+
+  &__description {
+    &:not(:last-child) {
+
+      margin-bottom: 1.5rem;
+    }
 
   }
-  &__title{
+
+  &__title {
     margin-bottom: 1.5rem;
     color: #202554;
     font-size: 2.4rem;
@@ -36,21 +55,85 @@
     font-weight: 700;
     line-height: normal;
   }
-  &-box{
+
+  &-box {
     width: 100%;
     max-width: 52rem;
     border-radius: 0.8rem;
     margin: -9rem auto 0;
     background: #FFF;
-    &-body{
+
+    &-body {
       padding: 2.8rem 4rem 4rem;
+      @media (max-height: 800px) {
+        padding: 2rem;
+      }
+      @media (max-width: 500px) {
+        padding: 1.6rem;
+      }
+
+
     }
-    &-head{
+
+    &-head {
       padding: 4rem 4rem 2.8rem;
       border-bottom: 1px solid #E2E6F8;
+      @media (max-height: 800px) {
+        padding: 2rem;
+      }
+      @media (max-width: 500px) {
+        padding: 1.6rem;
+      }
     }
   }
-  &-section{
-    padding-top: 0!important;
+
+  &-section {
+    padding-top: 0 !important;
+  }
+
+  &-checkout{
+    width: 100%;
+    margin-bottom: 2.8rem;
+  }
+
+  &-price {
+    margin-bottom: 2.4rem;
+    display: flex;
+    padding: 1.8rem 0rem;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+    align-self: stretch;
+    border-radius: 0.3rem;
+    border: 1px dashed rgba(82, 97, 223, 0.85);
+    background: #FBFCFF;
+    color: #333;
+    text-align: center;
+    font-size: 1.4rem;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 160%;
+
+    strong {
+      color: #5261DF;
+      font-size: 2.2rem;
+      font-weight: 700;
+    }
+  }
+
+  &-method {
+    &-box {
+      display: block;
+      margin-bottom: 1.5rem;
+    }
+
+    &__title {
+      margin-bottom: 1.2rem;
+      color: #202554;
+      font-size: 1.4rem;
+      font-style: normal;
+      font-weight: 500;
+      line-height: 120%;
+    }
   }
 }

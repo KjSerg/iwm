@@ -421,3 +421,50 @@ function get_client_city_by_ip( $ip ): string {
 
 }
 
+function get_time_diff( $time, $current_time = '' ): string {
+	$current_time = $current_time ?: current_time( 'd-m-Y H:i:s' );
+	$datetime1    = DateTime::createFromFormat( 'd-m-Y H:i:s', $time );
+	$datetime2    = DateTime::createFromFormat( 'd-m-Y H:i:s', $current_time );
+	$interval     = $datetime2->diff( $datetime1 );
+	$days         = $interval->d;
+	$hours        = $interval->h;
+	$result       = [];
+	$translations = time_diff_translations();
+	if ( $days > 0 ) {
+		$result[] = $days . ' ' . getPluralForm( $days, $translations['day'] );
+	}
+	if ( $hours > 0 || $days == 0 ) {
+		$result[] = $hours . ' ' . getPluralForm( $hours, $translations['hour'] );
+	}
+
+	return implode( ' ', $result );
+}
+
+function time_diff_translations(): array {
+	return [
+		'day'  => [
+			_l( 'день', 1 ),
+			_l( 'дні', 1 ),
+			_l( 'днів', 1 ),
+		],
+		'hour' => [
+			_l( 'година', 1 ),
+			_l( 'години', 1 ),
+			_l( 'годин', 1 ),
+		]
+	];
+}
+
+function getPluralForm( $number, $forms ) {
+	if ( $number == 1 ) {
+		return $forms[0]; // 1 день
+	} elseif ( $number >= 2 && $number <= 4 ) {
+		return $forms[1]; // 2-4 дні
+	} else {
+		return $forms[2]; // 5+ днів
+	}
+}
+
+function get_price_formated( $price, $currency = '' ): string {
+	return number_format( $price, 0, ',', ' ' ) . ' ' . $currency;
+}

@@ -3,17 +3,25 @@
 use InvoiceWM\Components\Offers;
 
 get_header();
-$var            = variables();
-$set            = $var['setting_home'];
-$assets         = $var['assets'];
-$url            = $var['url'];
-$url_home       = $var['url_home'];
-$id             = get_the_ID();
-$title          = esc_attr( get_the_title() );
-$invoice_status = carbon_get_post_meta( $id, 'invoice_status' );
-$post_status    = get_post_status( $id );
-$invoice_offers = carbon_get_post_meta( $id, 'invoice_offers' );
-$offers         = $invoice_offers ? Offers::get_offers( 'https://offer.web-mosaica.art/', '', $invoice_offers ) : [];
+$var                   = variables();
+$set                   = $var['setting_home'];
+$assets                = $var['assets'];
+$url                   = $var['url'];
+$url_home              = $var['url_home'];
+$id                    = get_the_ID();
+$title                 = esc_attr( get_the_title() );
+$invoice_status        = carbon_get_post_meta( $id, 'invoice_status' );
+$post_status           = get_post_status( $id );
+$invoice_offers        = carbon_get_post_meta( $id, 'invoice_offers' );
+$offers                = $invoice_offers ? Offers::get_offers( 'https://offer.web-mosaica.art/', '', $invoice_offers ) : [];
+$payment_methods       = carbon_get_theme_option( 'payment_methods' );
+$order_payment_methods = carbon_get_post_meta( $id, 'invoice_pay_methods' );
+$price                 = carbon_get_post_meta( $id, 'invoice_sum' );
+$currency              = carbon_get_post_meta( $id, 'invoice_currency' ) ?: 'UAH';
+$timestamp             = wp_next_scheduled( 'delete_scheduled_post', [ $id ] );
+$time                  = date( 'd-m-Y H:i:s', $timestamp );
+$current_time          = current_time( 'd-m-Y H:i:s' );
+$policy_page_id        = (int) get_option( 'wp_page_for_privacy_policy' );
 ?>
     <section class="head-section section">
 
@@ -56,11 +64,50 @@ $offers         = $invoice_offers ? Offers::get_offers( 'https://offer.web-mosai
 					} ?>
                 </div>
                 <div class="bill-box-body">
-                    <div class="bill-method">
-                        <div class="bill-method__title">
-							<?php _l( 'Виберіть спосіб оплати' ); ?>
+					<?php if ( $payment_methods ): ?>
+                        <div class="bill-method">
+                            <div class="bill-method__title">
+								<?php _l( 'Виберіть спосіб оплати' ); ?>
+                            </div>
+                            <label class="bill-method-box">
+                                <select name="payment_method" class="select" id="payment-method">
+									<?php foreach ( $payment_methods as $method ) {
+										$attr = ! in_array( esc_attr( $method['title'] ), $order_payment_methods ) ? 'disabled' : '';
+										echo "<option $attr data-icon=" . esc_attr( _u( $method['image'], 1 ) ) . " value=" . esc_attr( $method['title'] ) . ">" . esc_html( $method['title'] ) . "</option>";
+									} ?>
+                                </select>
+                            </label>
                         </div>
-                        <select name="" id=""></select>
+					<?php endif; ?>
+                    <div class="bill-price">
+                        <p><?php _l( 'Сума' ) ?></p>
+                        <strong><?php echo get_price_formated($price, $currency) ?></strong>
+                    </div>
+					<?php if ( $policy_page_id ): ?>
+                        <div class="form-consent bill-consent">
+                            <label class="form-consent-box">
+                                <input type="checkbox" class="bill-consent__input" name="consent" value="yes">
+                                <span></span>
+                            </label>
+                            <div class="form-consent-text">
+                                <p><?php _l( 'Приймаю умови' ) ?> <a
+                                            href="<?php echo esc_url( get_the_permalink( $policy_page_id ) ) ?>"><?php echo esc_html( get_the_title( $policy_page_id ) ) ?></a>.
+                                </p>
+                            </div>
+                        </div>
+						<?php
+						$wayforpay = new \InvoiceWM\pay\Wayforpay();
+						$wayforpay->set_order( $id );
+						$wayforpay->render_form( true );
+					else:
+						$wayforpay = new \InvoiceWM\pay\Wayforpay();
+						$wayforpay->set_order( $id );
+						$wayforpay->render_form();
+					endif; ?>
+                    <div class="bill-finish"
+                         data-time="<?php echo $time; ?>"
+                         data-timestamp="<?php echo $timestamp; ?>">
+						<?php echo _l( 'Посилання дійсне ще:', 1 ) . ' ' . get_time_diff( $time, $current_time ); ?>
                     </div>
                 </div>
             </div>
@@ -69,9 +116,9 @@ $offers         = $invoice_offers ? Offers::get_offers( 'https://offer.web-mosai
 				if ( $invoice_status == 'paid' ) {
 					echo 'Успішно оплачено!';
 				} else {
-					$wayforpay = new \InvoiceWM\pay\Wayforpay();
-					$wayforpay->set_order( $id );
-					$wayforpay->render_form();
+//					$wayforpay = new \InvoiceWM\pay\Wayforpay();
+//					$wayforpay->set_order( $id );
+//					$wayforpay->render_form();
 				}
 			} else {
 				if ( $invoice_status == 'paid' ) {

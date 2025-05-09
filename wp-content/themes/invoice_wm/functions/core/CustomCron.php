@@ -18,7 +18,8 @@ class CustomCron {
 	public static function schedule_post_deletion( $post_id, $time = 3600 ): void {
 		$post_id = absint( $post_id );
 		if ( ! wp_next_scheduled( 'delete_scheduled_post', [ $post_id ] ) ) {
-			wp_schedule_single_event( time() + $time, 'delete_scheduled_post', [ $post_id ] );
+			$current_time     = strtotime( current_time( 'Y-m-d H:i:s' ) );
+			wp_schedule_single_event( ($current_time + $time), 'delete_scheduled_post', [ $post_id ] );
 		}
 	}
 

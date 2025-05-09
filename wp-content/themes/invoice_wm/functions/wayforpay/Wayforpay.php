@@ -27,7 +27,7 @@ class Wayforpay {
 	}
 
 
-	public function render_form(): void {
+	public function render_form( $safety = false ): void {
 		$this->test();
 		$id         = $this->order_id;
 		$account    = $this->account;
@@ -54,8 +54,15 @@ class Wayforpay {
 		$key        = $this->key;
 		$hash       = hash_hmac( "md5", $string, $key );
 		$this->set_signature( $hash );
+		$attr        = 'action="https://secure.wayforpay.com/pay"';
+		$button_attr = 'class="button button__checkout"';
+		if ( $safety ) {
+			$attr        = 'data-action="https://secure.wayforpay.com/pay" disabled';
+			$button_attr = 'class="button button__checkout not-active" disabled';
+		}
 		?>
-        <form method="post" action="https://secure.wayforpay.com/pay" accept-charset="utf-8">
+        <form method="post" class="checkout-form bill-checkout" id="wayforpay" <?php echo $attr; ?>
+              accept-charset="utf-8">
             <input type="hidden" name="merchantAccount" value="<?php echo esc_attr( $account ) ?>">
             <input type="hidden" name="merchantAuthType" value="SimpleSignature">
             <input type="hidden" name="merchantDomainName" value="<?php echo esc_attr( $domain ) ?>">
@@ -70,7 +77,7 @@ class Wayforpay {
             <input type="hidden" name="serviceUrl" value="<?php echo esc_attr( $this->get_service_url() ) ?>">
             <input type="hidden" name="returnUrl" value="<?php echo esc_attr( $return_url ) ?>">
             <input type="hidden" name="orderLifetime" value="<?php echo( 3600 * 2 ) ?>">
-            <button class="button">Оплатити <?php echo $price . $currency ?></button>
+            <button <?php echo $button_attr; ?>><?php _l( 'ПЕРЕЙТИ ДО ОПЛАТИ' ) ?></button>
         </form>
 		<?php
 	}
@@ -110,4 +117,5 @@ class Wayforpay {
 	private function set_signature( bool|string $hash ): void {
 		carbon_set_post_meta( $this->order_id, 'wayforpay_signature', $hash );
 	}
+
 }

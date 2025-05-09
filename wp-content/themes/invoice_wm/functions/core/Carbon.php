@@ -59,6 +59,13 @@ class Carbon {
 		Container::make( 'theme_options', 'Order Settings' )
 		         ->set_page_parent( 'options-general.php' )
 		         ->add_fields( array(
+			         Field::make( 'separator', 'crb_separator1', __( 'Life time' ) ),
+			         Field::make( 'text', 'life_time_bill' )
+			              ->set_required( )
+				         ->set_help_text('days')
+			              ->set_attribute( 'type', 'number' )
+			              ->set_attribute( 'min', '1' ),
+			         Field::make( 'separator', 'crb_separator2', __( 'Methods' ) ),
 			         Field::make( 'complex', 'payment_methods' )
 			              ->add_fields( array(
 				              Field::make( 'image', 'image', __( 'Logo' ) )->set_required( true )->set_width( 50 ),

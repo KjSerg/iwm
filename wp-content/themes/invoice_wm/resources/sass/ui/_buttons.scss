@@ -27,6 +27,23 @@
   -o-transition: .5s;
   transition: .5s;
   cursor: pointer;
+  &__checkout{border-radius: 0.3rem;
+    width: 100%;
+    background: #889EFC;
+    display: flex;
+    height: 6.7rem;
+    padding: 1.4rem 2rem;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    align-self: stretch;color:  #FFF;
+    text-align: center;
+    font-size: 1.4rem;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 150%; /* 2.1rem */
+    letter-spacing: 0.168rem;
+  }
   &:hover{
     background-color: #f1f4ff;
     color: #889efc;

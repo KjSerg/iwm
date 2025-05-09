@@ -8,6 +8,9 @@ import {autocompleteOffer} from "./components/_autocomplete-offer";
 import editInvoiceLink from "./components/_edit-link";
 import './components/_viewer';
 import responser from "./forms/_responser";
+import {selectrickInit} from "./plugins/_selectric-init";
+import {billConsentInputInit} from "./bills/_billConsentInput";
+import {changePayMethod} from "./bills/_changePayMethod";
 export default class Application {
     constructor() {
         this.$doc = $(document);
@@ -55,6 +58,9 @@ export default class Application {
             showPassword();
             fancyboxInit();
             editInvoiceLink();
+            selectrickInit();
+            billConsentInputInit();
+            changePayMethod();
             this.loadMore();
             this.requestLinkInit();
             this.showLoaderOnClick();

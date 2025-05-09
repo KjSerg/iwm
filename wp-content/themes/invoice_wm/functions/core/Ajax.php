@@ -274,7 +274,7 @@ class Ajax {
         </label>
 
 
-		<?php the_payment_methods($pay_methods) ?>
+		<?php the_payment_methods( $pay_methods ) ?>
         <div class="form-label">
             <label for="autocomplete-offer" class="form-label-head">Офери</label>
             <div class="form-autocomplete">
@@ -362,7 +362,8 @@ class Ajax {
 		if ( function_exists( 'pll_set_post_language' ) ) {
 			pll_set_post_language( $_id, $lang );
 		}
-		$deletion_time = HOUR_IN_SECONDS * 24 * 5;
+		$life_time_bill = carbon_get_theme_option( 'life_time_bill' ) ?: 5;
+		$deletion_time  = HOUR_IN_SECONDS * 24 * intval( $life_time_bill );
 		CustomCron::schedule_post_deletion( $_id, $deletion_time );
 		$this->send_response( [
 			'id'  => $_id,
@@ -378,7 +379,7 @@ class Ajax {
 		}
 		$selected = $selected ? explode( ',', $selected ) : [];
 		$selected = $selected ? array_map( 'intval', $selected ) : [];
-		$res = Offers::get_offers( 'https://offer.web-mosaica.art/', $val );
+		$res      = Offers::get_offers( 'https://offer.web-mosaica.art/', $val );
 		if ( $res ) {
 			foreach ( $res as $id => $item ) {
 				$attr = in_array( $id, $selected ) ? 'checked' : '';

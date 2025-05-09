@@ -19,6 +19,7 @@
     "sass-loader": "^12.6.0"
   },
   "dependencies": {
-    "@fancyapps/fancybox": "^3.5.7"
+    "@fancyapps/fancybox": "^3.5.7",
+    "selectric": "^1.13.0"
   }
 }
