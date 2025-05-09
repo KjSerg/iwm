@@ -17,9 +17,9 @@ pll_register_string( 'Посилання застаріло!', 'Посиланн
 pll_register_string( 'Оплата успішна', 'Оплата успішна' );
 pll_register_string( 'Дякуємо! Ваш платіж було успішно проведено', 'Дякуємо! Ваш платіж було успішно проведено' );
 pll_register_string( 'ЗАВАНТАЖИТИ ЧЕК', 'ЗАВАНТАЖИТИ ЧЕК' );
-//pll_register_string( 'Площадь', 'Площадь' );
-//pll_register_string( 'Площадь', 'Площадь' );
-//pll_register_string( 'Площадь', 'Площадь' );
+pll_register_string( 'На жаль, платіж не було здійснено', 'На жаль, платіж не було здійснено' );
+pll_register_string( 'Помилка оплати', 'Помилка оплати' );
+pll_register_string( 'Спробувати ще раз', 'Спробувати ще раз' );
 //pll_register_string( 'Площадь', 'Площадь' );
 //pll_register_string( 'Площадь', 'Площадь' );
 //pll_register_string( 'Площадь', 'Площадь' );

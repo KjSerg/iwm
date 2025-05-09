@@ -57,7 +57,7 @@ class Bill {
 					<?php _l( 'Виберіть спосіб оплати' ); ?>
                 </div>
                 <label class="bill-method-box">
-                    <select name="payment_method" class="select" id="payment-method">
+                    <select name="payment_method" class="select" id="payment-method" data-id="<?php echo $this->id ?>">
 						<?php foreach ( $payment_methods as $method ) {
 							$attr = ! in_array( esc_attr( $method['title'] ), $order_payment_methods ) ? 'disabled' : '';
 							echo "<option $attr data-icon=" . esc_attr( _u( $method['image'], 1 ) ) . " value=" . esc_attr( $method['title'] ) . ">" . esc_html( $method['title'] ) . "</option>";

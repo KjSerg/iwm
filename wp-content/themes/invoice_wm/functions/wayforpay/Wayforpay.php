@@ -27,22 +27,24 @@ class Wayforpay {
 	}
 
 
-	public function render_form( $safety = false ): void {
+	public function render_form( $safety = false, $button_text = '' ): void {
 		$this->test();
-		$id         = $this->order_id;
-		$account    = $this->account;
-		$domain     = $this->domain;
-		$return_url = get_the_permalink( $id );
-		$price      = carbon_get_post_meta( $id, 'invoice_sum' );
-		$currency   = carbon_get_post_meta( $id, 'invoice_currency' ) ?: 'UAH';
-		$price      = floatval( $price );
-		$currency   = strtoupper( esc_attr( $currency ) );
-		$title      = esc_attr( get_the_title() );
-		$timestamp  = current_time( 'timestamp' );
-		$data       = [
+		$button_text    = $button_text ?: _l( 'ПЕРЕЙТИ ДО ОПЛАТИ', 1 );
+		$id             = $this->order_id;
+		$account        = $this->account;
+		$domain         = $this->domain;
+		$return_url     = get_the_permalink( $id );
+		$price          = carbon_get_post_meta( $id, 'invoice_sum' );
+		$currency       = carbon_get_post_meta( $id, 'invoice_currency' ) ?: 'UAH';
+		$price          = floatval( $price );
+		$currency       = strtoupper( esc_attr( $currency ) );
+		$title          = esc_attr( get_the_title() );
+		$timestamp      = current_time( 'timestamp' );
+		$orderReference = "WMI_" . $id . "_$timestamp";
+		$data           = [
 			$account,
 			$domain,
-			"WMI$id",
+			$orderReference,
 			$timestamp,
 			$price,
 			$currency,
@@ -50,9 +52,9 @@ class Wayforpay {
 			1,
 			$price
 		];
-		$string     = implode( ';', $data );
-		$key        = $this->key;
-		$hash       = hash_hmac( "md5", $string, $key );
+		$string         = implode( ';', $data );
+		$key            = $this->key;
+		$hash           = hash_hmac( "md5", $string, $key );
 		$this->set_signature( $hash );
 		$attr        = 'action="https://secure.wayforpay.com/pay"';
 		$button_attr = 'class="button button__checkout"';
@@ -66,7 +68,7 @@ class Wayforpay {
             <input type="hidden" name="merchantAccount" value="<?php echo esc_attr( $account ) ?>">
             <input type="hidden" name="merchantAuthType" value="SimpleSignature">
             <input type="hidden" name="merchantDomainName" value="<?php echo esc_attr( $domain ) ?>">
-            <input type="hidden" name="orderReference" value="WMI<?php echo $id ?>">
+            <input type="hidden" name="orderReference" value="<?php echo $orderReference; ?>">
             <input type="hidden" name="orderDate" value="<?php echo $timestamp ?>">
             <input type="hidden" name="amount" value="<?php echo $price ?>">
             <input type="hidden" name="currency" value="<?php echo $currency ?>">
@@ -77,7 +79,7 @@ class Wayforpay {
             <input type="hidden" name="serviceUrl" value="<?php echo esc_attr( $this->get_service_url() ) ?>">
             <input type="hidden" name="returnUrl" value="<?php echo esc_attr( $return_url ) ?>">
             <input type="hidden" name="orderLifetime" value="<?php echo( 3600 * 2 ) ?>">
-            <button <?php echo $button_attr; ?>><?php _l( 'ПЕРЕЙТИ ДО ОПЛАТИ' ) ?></button>
+            <button <?php echo $button_attr; ?>><?php echo esc_html( $button_text ) ?></button>
         </form>
 		<?php
 	}

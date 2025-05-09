@@ -43,6 +43,25 @@ class Ajax {
 
 		add_action( 'wp_ajax_nopriv_get_views', [ $this, 'get_views' ] );
 		add_action( 'wp_ajax_get_views', [ $this, 'get_views' ] );
+
+		add_action( 'wp_ajax_nopriv_save_payment_method', [ $this, 'save_payment_method' ] );
+		add_action( 'wp_ajax_save_payment_method', [ $this, 'save_payment_method' ] );
+	}
+
+	public function save_payment_method(): void {
+		$id             = filter_input( INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT );
+		$payment_method = filter_input( INPUT_POST, 'payment_method' );
+		if ( ! $payment_method ) {
+			$this->send_error( 'error empty value' );
+		}
+		if ( ! get_post( $id ) ) {
+			$this->send_error( 'order not found' );
+		}
+		carbon_set_post_meta( $id, 'invoice_pay_method', $payment_method );
+		$this->send_response( [
+			'success'            => true,
+			'invoice_pay_method' => carbon_get_post_meta( $id, 'invoice_pay_method' )
+		] );
 	}
 
 	public function get_views(): void {
@@ -193,6 +212,7 @@ class Ajax {
 		carbon_set_post_meta( $_id, 'invoice_sum', $price );
 		carbon_set_post_meta( $_id, 'invoice_currency', $currency );
 		carbon_set_post_meta( $_id, 'invoice_pay_methods', $methods );
+		carbon_set_post_meta( $_id, 'invoice_pay_method', $methods[0] );
 		carbon_set_post_meta( $_id, 'invoice_offers', $selected_offers );
 		if ( function_exists( 'pll_set_post_language' ) ) {
 			pll_set_post_language( $_id, $lang );
@@ -272,8 +292,6 @@ class Ajax {
             <span class="form-label-head">Опис</span>
             <textarea name="text"><?php echo esc_attr( strip_tags( get_content_by_id( $id ) ) ) ?></textarea>
         </label>
-
-
 		<?php the_payment_methods( $pay_methods ) ?>
         <div class="form-label">
             <label for="autocomplete-offer" class="form-label-head">Офери</label>
@@ -396,7 +414,6 @@ class Ajax {
 		}
 		die();
 	}
-
 
 	public function change_bill(): void {
 		$response = [];

@@ -45,7 +45,15 @@ class Carbon {
 		Container::make( 'theme_options', 'Theme Settings' )
 		         ->set_page_parent( 'options-general.php' )
 		         ->add_fields( array(
+			         Field::make( 'separator', 'crb_separator1', __( 'Logo' ) ),
 			         Field::make( 'image', 'logo' )->set_required(),
+			         Field::make( 'separator', 'crb_separator2', __( 'Contacts' ) ),
+			         Field::make( 'complex', 'contact_methods' )
+			              ->add_fields( array(
+				              Field::make( 'image', 'image', __( 'Logo' ) )->set_required( true )->set_width( 33 ),
+				              Field::make( 'text', 'title', __( 'Title' ) )->set_required( true )->set_width( 33 ),
+				              Field::make( 'text', 'url' )->set_required( true )->set_width( 33 ),
+			              ) )
 		         ) );
 
 		Container::make( 'theme_options', 'Wayforpay Settings' )
@@ -109,6 +117,8 @@ class Carbon {
 			              ] ),
 			         Field::make( 'multiselect', 'invoice_pay_methods' )->set_width( 50 )
 			              ->set_required()
+			              ->set_options( [ $this, 'get_payment_method' ] ),
+			         Field::make( 'select', 'invoice_pay_method' )->set_width( 50 )
 			              ->set_options( [ $this, 'get_payment_method' ] ),
 			         Field::make( 'text', 'invoice_offers' )
 		         ] );

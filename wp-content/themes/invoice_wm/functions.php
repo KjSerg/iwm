@@ -40,7 +40,7 @@ function wayforpay_payment_webhook_callback( WP_REST_Request $request ): void {
 		http_response_code( 400 );
 		exit( "Error $order" );
 	}
-	$order_id = intval( str_replace( 'WMI', '', $order ) );
+	$order_id = intval( explode( '_', $order )[1] );
 	if ( ! $order_id || ! get_post( $order_id ) ) {
 		http_response_code( 400 );
 		error_log( "Error $order_id" );
@@ -83,13 +83,13 @@ function wayforpay_payment_webhook_callback( WP_REST_Request $request ): void {
 	carbon_set_post_meta( $order_id, 'wayforpay_repay_url', $repayUrl );
 	$invoice_status = $transactionStatus == 'Approved' ? 'paid' : 'not_paid';
 	carbon_set_post_meta( $order_id, 'invoice_status', $invoice_status );
-	if($transactionStatus == 'Approved'){
+	if ( $transactionStatus == 'Approved' ) {
 		$post_data = array(
 			'ID'          => $order_id,
 			'post_status' => 'publish',
 		);
 		wp_update_post( $post_data );
-		\InvoiceWM\core\CustomCron::cancel_post_deletion($order_id);
+		\InvoiceWM\core\CustomCron::cancel_post_deletion( $order_id );
 	}
 	$time   = current_time( 'timestamp' );
 	$d      = [ $order, 'accept', $time ];

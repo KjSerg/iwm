@@ -17723,13 +17723,29 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   changePayMethod: () => (/* binding */ changePayMethod)
 /* harmony export */ });
 /* harmony import */ var _utils_helpers__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils/_helpers */ "./resources/js/utils/_helpers.js");
+/* harmony import */ var _forms_responser__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../forms/_responser */ "./resources/js/forms/_responser.js");
 /* provided dependency */ var $ = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
+
 
 var changePayMethod = function changePayMethod() {
   _utils_helpers__WEBPACK_IMPORTED_MODULE_0__.$doc.on('change', '#payment-method', function (e) {
-    var val = $(this).val();
+    var $t = $(this);
+    var val = $t.val();
     _utils_helpers__WEBPACK_IMPORTED_MODULE_0__.$doc.find('.checkout-form').hide();
     _utils_helpers__WEBPACK_IMPORTED_MODULE_0__.$doc.find('.checkout-form#' + val).show();
+    $.ajax({
+      type: "POST",
+      url: adminAjax,
+      data: {
+        'action': 'save_payment_method',
+        'payment_method': val,
+        'id': $t.attr('data-id')
+      }
+    }).done(function (response) {
+      if (response) {
+        (0,_forms_responser__WEBPACK_IMPORTED_MODULE_1__["default"])(response);
+      }
+    });
   });
 };
 
