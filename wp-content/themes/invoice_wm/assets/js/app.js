@@ -17583,6 +17583,30 @@ var Application = /*#__PURE__*/function () {
       });
     }
   }, {
+    key: "connectInit",
+    value: function connectInit() {
+      var $doc = $(document);
+      $doc.on('click', '.connect-button', function (e) {
+        e.preventDefault();
+        var $t = $(this);
+        var $wrapper = $t.closest('.connect').find('.connect-wrapper');
+        $t.closest('.connect').find('.connect-massage').fadeOut(500);
+        if ($wrapper.length > 0) {
+          if ($wrapper.hasClass('waiting')) return;
+          if ($wrapper.hasClass('active')) {
+            $wrapper.find('.connect-button__item').removeClass('transition-none');
+            $wrapper.removeClass('active');
+          } else {
+            $wrapper.addClass('active').addClass('waiting');
+            setTimeout(function () {
+              $wrapper.find('.connect-button__item').addClass('transition-none');
+              $wrapper.removeClass('waiting');
+            }, 450);
+          }
+        }
+      });
+    }
+  }, {
     key: "initComponents",
     value: function initComponents() {
       var _this = this;
@@ -17596,6 +17620,7 @@ var Application = /*#__PURE__*/function () {
         (0,_plugins_selectric_init__WEBPACK_IMPORTED_MODULE_10__.selectrickInit)();
         (0,_bills_billConsentInput__WEBPACK_IMPORTED_MODULE_11__.billConsentInputInit)();
         (0,_bills_changePayMethod__WEBPACK_IMPORTED_MODULE_12__.changePayMethod)();
+        _this.connectInit();
         _this.loadMore();
         _this.requestLinkInit();
         _this.showLoaderOnClick();

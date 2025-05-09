@@ -50,6 +50,29 @@ export default class Application {
         });
     }
 
+    connectInit(){
+        var $doc = $(document);
+        $doc.on('click', '.connect-button', function (e) {
+            e.preventDefault();
+            var $t = $(this);
+            var $wrapper = $t.closest('.connect').find('.connect-wrapper');
+            $t.closest('.connect').find('.connect-massage').fadeOut(500);
+            if ($wrapper.length > 0) {
+                if ($wrapper.hasClass('waiting')) return;
+                if ($wrapper.hasClass('active')) {
+                    $wrapper.find('.connect-button__item').removeClass('transition-none');
+                    $wrapper.removeClass('active');
+                } else {
+                    $wrapper.addClass('active').addClass('waiting');
+                    setTimeout(function () {
+                        $wrapper.find('.connect-button__item').addClass('transition-none');
+                        $wrapper.removeClass('waiting');
+                    }, 450);
+                }
+            }
+        });
+    }
+
     initComponents() {
         this.$doc.ready(() => {
             autocompleteOffer();
@@ -61,6 +84,7 @@ export default class Application {
             selectrickInit();
             billConsentInputInit();
             changePayMethod();
+            this.connectInit();
             this.loadMore();
             this.requestLinkInit();
             this.showLoaderOnClick();

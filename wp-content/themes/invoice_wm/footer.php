@@ -105,21 +105,14 @@ $id       = get_the_ID();
 <?php else: ?>
     <div class="connect">
         <div class="connect-wrapper">
-            <a href="#modal-form" class="connect-button__item open_modal">
-                        <svg width="23" height="17" viewBox="0 0 23 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <rect x="0.5" y="0.5" width="22" height="15.4286" rx="1.5" stroke="#656B9B"/>
-                            <path d="M2.19043 3.28564L11.5 9.85707L20.8095 3.28564" stroke="#656B9B"
-                                  stroke-linecap="round"/>
-                        </svg>
-                <span>Email</span>
-            </a>
-			<?php if ( have_rows( 'contacts_list', $setting ) ): ?>
-				<?php while ( have_rows( 'contacts_list', $setting ) ) : the_row(); ?>
-                    <a href="<?php e( 'link' ); ?>" target="_blank" rel="nofollow" class="connect-button__item">
-						<?php the_image( g( 'icon' ) ); ?>
-                        <span><?php e( 'name' ); ?></span>
+			<?php if ( $contact_methods = carbon_get_theme_option( 'contact_methods' ) ): ?>
+				<?php foreach ( $contact_methods as $method ): ?>
+                    <a href="<?php echo esc_attr( $method['url'] ); ?>" target="_blank" rel="nofollow"
+                       class="connect-button__item">
+						<?php the_image( $method['image'] ); ?>
+                        <span><?php echo esc_attr( $method['title'] ); ?></span>
                     </a>
-				<?php endwhile; ?>
+				<?php endforeach; ?>
 			<?php endif; ?>
         </div>
         <a href="#" class="connect-button">
