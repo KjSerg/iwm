@@ -3,6 +3,7 @@
 namespace InvoiceWM\core;
 
 use InvoiceWM\Components\Offers;
+use InvoiceWM\pay\WhitepayPayment;
 
 class Ajax {
 	private static ?self $instance = null;
@@ -46,6 +47,33 @@ class Ajax {
 
 		add_action( 'wp_ajax_nopriv_save_payment_method', [ $this, 'save_payment_method' ] );
 		add_action( 'wp_ajax_save_payment_method', [ $this, 'save_payment_method' ] );
+
+		add_action( 'wp_ajax_nopriv_create_whitepay_payment', [ $this, 'create_whitepay_payment' ] );
+		add_action( 'wp_ajax_create_whitepay_payment', [ $this, 'create_whitepay_payment' ] );
+	}
+
+	public function create_whitepay_payment(): void {
+		$nonce = filter_input( INPUT_POST, 'true_nonce' );
+		if ( ! $nonce || ! wp_verify_nonce( $nonce, 'create_whitepay_payment' ) ) {
+			$this->send_error( 'Error request nonce' );
+		}
+		$id = filter_input( INPUT_POST, 'order_id', FILTER_SANITIZE_NUMBER_INT ) ?: 0;
+		if ( ! $id || ! get_post( $id ) ) {
+			$this->send_error( 'Error request id' );
+		}
+		$invoice_sum = carbon_get_post_meta( $id, 'invoice_sum' );
+		$whitepay    = new WhitepayPayment();
+		$r           = $whitepay->createPayment( $id, get_the_title( $id ), $invoice_sum );
+		if ( $r['success'] === false ) {
+			$this->send_error( $r['error'] );
+		}
+		$whitepay_order_id = $r['order_id'];
+		carbon_set_post_meta( $id, 'whitepay_order_id', $whitepay_order_id );
+		$this->send_response( [
+			'success'  => true,
+			'order_id' => $whitepay_order_id,
+			'url'      => "Location: https://pay.whitepay.com/{$whitepay_order_id}"
+		] );
 	}
 
 	public function save_payment_method(): void {

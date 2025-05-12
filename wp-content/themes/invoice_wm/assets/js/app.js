@@ -17753,26 +17753,32 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var changePayMethod = function changePayMethod() {
+  if (_utils_helpers__WEBPACK_IMPORTED_MODULE_0__.$doc.find('#payment-method').length === 0) return;
   _utils_helpers__WEBPACK_IMPORTED_MODULE_0__.$doc.on('change', '#payment-method', function (e) {
     var $t = $(this);
     var val = $t.val();
-    _utils_helpers__WEBPACK_IMPORTED_MODULE_0__.$doc.find('.checkout-form').hide();
-    _utils_helpers__WEBPACK_IMPORTED_MODULE_0__.$doc.find('.checkout-form#' + val).show();
-    $.ajax({
-      type: "POST",
-      url: adminAjax,
-      data: {
-        'action': 'save_payment_method',
-        'payment_method': val,
-        'id': $t.attr('data-id')
-      }
-    }).done(function (response) {
-      if (response) {
-        (0,_forms_responser__WEBPACK_IMPORTED_MODULE_1__["default"])(response);
-      }
-    });
+    showComponent(val, $t.attr('data-id'));
   });
+  showComponent(_utils_helpers__WEBPACK_IMPORTED_MODULE_0__.$doc.find('#payment-method').val(), _utils_helpers__WEBPACK_IMPORTED_MODULE_0__.$doc.find('#payment-method').attr('data-id'));
 };
+function showComponent(paymentMethodName, billID) {
+  var val = paymentMethodName;
+  _utils_helpers__WEBPACK_IMPORTED_MODULE_0__.$doc.find('.checkout-form').hide();
+  _utils_helpers__WEBPACK_IMPORTED_MODULE_0__.$doc.find('.checkout-form#' + val).show();
+  $.ajax({
+    type: "POST",
+    url: adminAjax,
+    data: {
+      'action': 'save_payment_method',
+      'payment_method': val,
+      'id': billID
+    }
+  }).done(function (response) {
+    if (response) {
+      (0,_forms_responser__WEBPACK_IMPORTED_MODULE_1__["default"])(response);
+    }
+  });
+}
 
 /***/ }),
 

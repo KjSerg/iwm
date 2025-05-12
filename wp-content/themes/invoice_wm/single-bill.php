@@ -83,10 +83,16 @@ $payment_attempt_test  = $wayforpay_status != '';
 									$wayforpay = new \InvoiceWM\pay\Wayforpay();
 									$wayforpay->set_order( $id );
 									$wayforpay->render_form( true );
+
+                                    $whitepay = new \InvoiceWM\pay\WhitepayPayment();
+                                    $whitepay->renderForm($id, true);
 								else:
 									$wayforpay = new \InvoiceWM\pay\Wayforpay();
 									$wayforpay->set_order( $id );
 									$wayforpay->render_form();
+
+									$whitepay = new \InvoiceWM\pay\WhitepayPayment();
+									$whitepay->renderForm($id);
 								endif; ?>
                                 <div class="bill-finish"
                                      data-time="<?php echo $time; ?>"
@@ -121,7 +127,6 @@ $payment_attempt_test  = $wayforpay_status != '';
                                     </a>
 									<?php
 								} else {
-
 									$wayforpay = new \InvoiceWM\pay\Wayforpay();
 									$wayforpay->set_order( $id );
 									$wayforpay->render_form( false, _l( 'Спробувати ще раз', 1 ) );

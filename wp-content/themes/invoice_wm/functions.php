@@ -14,6 +14,7 @@ get_template_part( 'functions/features/Columns' );
 get_template_part( 'functions/helpers/helpers' );
 get_template_part( 'functions/settings/SettingsTheme' );
 get_template_part( 'functions/wayforpay/Wayforpay' );
+get_template_part( 'functions/whitepay/WhitepayPayment' );
 get_template_part( 'functions/components/components' );
 get_template_part( 'functions/components/Offers' );
 get_template_part( 'functions/translations/translations' );

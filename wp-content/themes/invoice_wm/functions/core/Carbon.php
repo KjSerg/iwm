@@ -63,14 +63,21 @@ class Carbon {
 			         Field::make( 'text', 'wayforpay_account' ),
 			         Field::make( 'text', 'wayforpay_domain' ),
 		         ) );
+		Container::make( 'theme_options', 'Whitepay Settings' )
+		         ->set_page_parent( 'options-general.php' )
+		         ->add_fields( array(
+			         Field::make( 'text', 'whitepay_key' ),
+			         Field::make( 'text', 'whitepay_network' ),
+			         Field::make( 'text', 'whitepay_currency' ),
+		         ) );
 
 		Container::make( 'theme_options', 'Order Settings' )
 		         ->set_page_parent( 'options-general.php' )
 		         ->add_fields( array(
 			         Field::make( 'separator', 'crb_separator1', __( 'Life time' ) ),
 			         Field::make( 'text', 'life_time_bill' )
-			              ->set_required( )
-				         ->set_help_text('days')
+			              ->set_required()
+			              ->set_help_text( 'days' )
 			              ->set_attribute( 'type', 'number' )
 			              ->set_attribute( 'min', '1' ),
 			         Field::make( 'separator', 'crb_separator2', __( 'Methods' ) ),
@@ -135,6 +142,16 @@ class Carbon {
 		         ] )
 		         ->add_tab( 'Log', [
 			         Field::make( 'textarea', 'wayforpay_log' ),
+		         ] );
+		Container::make( 'post_meta', 'whitepay' )
+		         ->where( 'post_type', '=', 'bill' )
+		         ->add_tab( 'Data', [
+			         Field::make( 'text', 'whitepay_amount' ),
+			         Field::make( 'text', 'whitepay_currency' ),
+			         Field::make( 'text', 'whitepay_order_id' ),
+		         ] )
+		         ->add_tab( 'Log', [
+			         Field::make( 'textarea', 'whitepay_log' ),
 		         ] );
 
 		Container::make( 'post_meta', 'Views' )

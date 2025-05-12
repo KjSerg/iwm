@@ -4,7 +4,10 @@
   bottom: 10rem;
   right: 5rem;
   z-index: 20;
-
+  @media (max-width: 450px) {
+    bottom: 2rem;
+    right: 2rem;
+  }
 }
 
 
